@@ -1,0 +1,15 @@
+# This project uses Node.js. The following are key tools used:
+
+Frontend:
+- Next.js
+- React
+- Tailwind CSS
+
+Backend:
+- pdf-parse (PDF text extraction)
+- Ollama (local AI model serving)
+
+AI Model:
+- Mistral via Ollama (https://ollama.com)
+
+Local development only; no paid APIs required.
