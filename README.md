@@ -1,6 +1,6 @@
 # AI Resume Critic
 
-A modern web app that analyzes and critiques resumes using the Ollama Mistral LLM. Upload your PDF resume and receive instant, AI-powered feedback.
+A modern web app that analyzes and critiques resumes using the Ollama Mistral LLM. Upload your PDF resume and receive instant, AI-powered feedback or generate personalized cover letters that highlight your matching skills.
 
 ## Features
 
@@ -8,6 +8,8 @@ A modern web app that analyzes and critiques resumes using the Ollama Mistral LL
 - Extracts and previews resume text
 - Analyzes your resume using Ollama Mistral
 - Provides actionable feedback for improvement
+- Generates personalized cover letters based on job descriptions
+- Highlights skills that match the job requirements
 - Modern, responsive UI built with React and Tailwind CSS
 
 ## Getting Started
@@ -54,7 +56,14 @@ A modern web app that analyzes and critiques resumes using the Ollama Mistral LL
 ## Project Structure
 
 - `pages/` - Next.js API routes and page components
+  - `index.js` - Main application page with tabs for resume critique and cover letter generation
+  - `api/` - Backend API endpoints
+    - `upload.js` - PDF text extraction
+    - `analyze.js` - Resume analysis
+    - `generate-cover-letter.js` - Cover letter generation
 - `components/` - Reusable React components
+  - `ResumePanel.js` - Resume text display and analysis
+  - `CoverLetterGenerator.js` - Cover letter generation interface
 - `styles/global.css` - Tailwind CSS and custom styles
 
 ## API Endpoints
@@ -65,10 +74,14 @@ A modern web app that analyzes and critiques resumes using the Ollama Mistral LL
 - `POST /api/analyze`  
   Sends resume text to Ollama Mistral for analysis and returns feedback.
 
+- `POST /api/generate-cover-letter`  
+  Generates a personalized cover letter based on the resume and job description.
+
 ## Customization
 
 - Update the prompt in `pages/api/analyze.js` to tailor feedback style.
-- Adjust UI in `components/ResumePanel.js` and `pages/index.js` as needed.
+- Modify the cover letter generation prompt in `pages/api/generate-cover-letter.js`.
+- Adjust UI in `components/ResumePanel.js`, `components/CoverLetterGenerator.js`, and `pages/index.js` as needed.
 
 ## License
 

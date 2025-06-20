@@ -1,84 +1,14 @@
 import { useState } from "react";
-import { Upload, FileText, Sparkles, BarChart3 } from "lucide-react";
-
-// Mock ResumePanel component since we don't have the original
-const ResumePanel = ({ resumeText, setResumeText, onAnalyze, loading }) => (
-  <div style={{
-    width: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: '16px',
-    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    padding: '24px',
-    marginBottom: '24px'
-  }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-      <FileText size={20} color="#2563eb" />
-      <h3 style={{ fontWeight: '600', color: '#1f2937', margin: 0 }}>Resume Preview</h3>
-    </div>
-    <div style={{ marginBottom: '16px' }}>
-      <textarea
-        value={resumeText}
-        onChange={(e) => setResumeText(e.target.value)}
-        style={{
-          width: '100%',
-          height: '128px',
-          padding: '12px',
-          border: '1px solid #d1d5db',
-          borderRadius: '8px',
-          resize: 'none',
-          fontFamily: 'system-ui, -apple-system, sans-serif',
-          fontSize: '14px'
-        }}
-        placeholder="Your resume text will appear here..."
-      />
-    </div>
-    <button
-      onClick={onAnalyze}
-      disabled={loading}
-      style={{
-        width: '100%',
-        background: loading ? '#9ca3af' : 'linear-gradient(to right, #2563eb, #7c3aed)',
-        color: 'white',
-        padding: '12px 24px',
-        borderRadius: '8px',
-        fontWeight: '600',
-        border: 'none',
-        cursor: loading ? 'not-allowed' : 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '8px',
-        fontSize: '16px'
-      }}
-    >
-      {loading ? (
-        <>
-          <div style={{
-            width: '20px',
-            height: '20px',
-            border: '2px solid white',
-            borderTop: '2px solid transparent',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite'
-          }}></div>
-          Analyzing...
-        </>
-      ) : (
-        <>
-          <BarChart3 size={20} />
-          Analyze Resume
-        </>
-      )}
-    </button>
-  </div>
-);
+import { Upload, FileText, Sparkles, BarChart3, FileEdit, ClipboardCheck, Linkedin } from "lucide-react";
+import ResumePanel from "../components/ResumePanel";
+import CoverLetterGenerator from "../components/CoverLetterGenerator";
 
 export default function Home() {
   const [resumeText, setResumeText] = useState("");
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [activeTab, setActiveTab] = useState("resume-critique"); // "resume-critique" or "cover-letter"
 
   const handleFileUpload = async (file) => {
     if (!file || file.type !== "application/pdf") {
@@ -184,11 +114,50 @@ export default function Home() {
       <div style={{
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #e8eaf6 100%)',
-        padding: '16px'
+        padding: '16px',
+        position: 'relative'
       }}>
+        {/* LinkedIn Profile Link */}
+        <a 
+          href="https://www.linkedin.com/in/joner-de-silva-861575203/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          title="Creator's LinkedIn Profile"
+          aria-label="Creator's LinkedIn Profile"
+          style={{
+            position: 'absolute',
+            top: '16px',
+            right: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '10px',
+            backgroundColor: '#0077b5',
+            color: 'white',
+            borderRadius: '50%',
+            textDecoration: 'none',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            transition: 'transform 0.2s, box-shadow 0.2s',
+            zIndex: 10
+          }}
+          onMouseOver={(e) => {
+            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+          }}
+          onMouseOut={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+          }}
+        >
+          <Linkedin size={22} />
+        </a>
+        
         <div style={{
           maxWidth: '1024px',
-          margin: '0 auto'
+          margin: '0 auto',
+          width: '100%',
+          boxSizing: 'border-box',
+          overflowX: 'hidden'
         }}>
           {/* Header */}
           <div style={{
@@ -196,20 +165,6 @@ export default function Home() {
             marginBottom: '48px',
             paddingTop: '32px'
           }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginBottom: '16px'
-            }}>
-              <div style={{
-                padding: '12px',
-                background: 'linear-gradient(to right, #2563eb, #7c3aed)',
-                borderRadius: '16px',
-                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-              }}>
-                <Sparkles size={32} color="white" />
-              </div>
-            </div>
             <h1 style={{
               fontSize: '48px',
               fontWeight: 'bold',
@@ -217,7 +172,7 @@ export default function Home() {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
-              marginBottom: '16px',
+              margin: '0 0 16px 0',
               fontFamily: 'system-ui, -apple-system, sans-serif'
             }}>
               AI Resume Critic
@@ -225,11 +180,11 @@ export default function Home() {
             <p style={{
               color: '#6b7280',
               fontSize: '18px',
-              maxWidth: '512px',
+              maxWidth: '600px',
               margin: '0 auto',
               lineHeight: '1.6'
             }}>
-              Get intelligent feedback on your resume with AI-powered analysis. Upload your PDF and discover areas for improvement.
+              Get intelligent feedback on your resume with AI-powered analysis or generate personalized cover letters that highlight your matching skills. Upload your PDF to get started.
             </p>
           </div>
 
@@ -309,8 +264,58 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Resume Panel */}
+          {/* Tab Navigation */}
           {resumeText && (
+            <div className="fade-in" style={{ marginBottom: '24px' }}>
+              <div style={{
+                display: 'flex',
+                borderBottom: '1px solid #e5e7eb',
+                marginBottom: '24px'
+              }}>
+                <button
+                  onClick={() => setActiveTab("resume-critique")}
+                  style={{
+                    padding: '12px 24px',
+                    fontWeight: activeTab === "resume-critique" ? '600' : '400',
+                    color: activeTab === "resume-critique" ? '#2563eb' : '#6b7280',
+                    borderBottom: activeTab === "resume-critique" ? '2px solid #2563eb' : 'none',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    fontSize: '16px'
+                  }}
+                >
+                  <BarChart3 size={18} />
+                  Resume Critique
+                </button>
+                <button
+                  onClick={() => setActiveTab("cover-letter")}
+                  style={{
+                    padding: '12px 24px',
+                    fontWeight: activeTab === "cover-letter" ? '600' : '400',
+                    color: activeTab === "cover-letter" ? '#2563eb' : '#6b7280',
+                    borderBottom: activeTab === "cover-letter" ? '2px solid #2563eb' : 'none',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    fontSize: '16px'
+                  }}
+                >
+                  <FileEdit size={18} />
+                  Cover Letter Generator
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Resume Panel */}
+          {resumeText && activeTab === "resume-critique" && (
             <div className="fade-in">
               <ResumePanel
                 resumeText={resumeText}
@@ -320,9 +325,16 @@ export default function Home() {
               />
             </div>
           )}
+          
+          {/* Cover Letter Generator */}
+          {resumeText && activeTab === "cover-letter" && (
+            <div className="fade-in">
+              <CoverLetterGenerator resumeText={resumeText} />
+            </div>
+          )}
 
           {/* Feedback Section */}
-          {feedback && (
+          {feedback && activeTab === "resume-critique" && (
             <div className="fade-in" style={{ marginBottom: '32px' }}>
               <div style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -364,7 +376,10 @@ export default function Home() {
                     borderLeft: '4px solid #2563eb',
                     fontFamily: 'system-ui, -apple-system, sans-serif',
                     fontSize: '14px',
-                    margin: 0
+                    margin: 0,
+                    overflowX: 'auto',
+                    maxWidth: '100%',
+                    boxSizing: 'border-box'
                   }}>
                     {feedback}
                   </pre>
@@ -390,6 +405,14 @@ export default function Home() {
             }}>
               <span>Powered by</span>
               <span style={{ fontWeight: '600', color: '#2563eb' }}>Ollama Mistral</span>
+            </div>
+            <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'center', gap: '16px' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <BarChart3 size={14} color="#4b5563" /> Resume Analysis
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <FileEdit size={14} color="#4b5563" /> Cover Letter Generation
+              </span>
             </div>
             <p style={{ margin: 0 }}>
               &copy; {new Date().getFullYear()} AI Resume Critic. All rights reserved.

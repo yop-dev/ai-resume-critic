@@ -7,6 +7,11 @@
     "start": "next start"
   },
   "dependencies": {
+    "canvg": "^4.0.3",
+    "dompurify": "^3.2.6",
+    "html2canvas": "^1.4.1",
+    "html2pdf.js": "^0.10.3",
+    "jspdf": "^3.0.1",
     "lucide-react": "^0.517.0",
     "next": "latest",
     "pdf-parse": "^1.1.1",
