@@ -3,6 +3,9 @@ node_modules/
 out/
 .env
 .env.local
+.env.local.example
 .DS_Store
 *.log
 acli.exe
+test-groq.js
+test-groq-models.js

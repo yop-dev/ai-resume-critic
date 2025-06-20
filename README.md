@@ -48,10 +48,14 @@ A modern web app that analyzes and critiques resumes using Groq's LLaMA-3-8B mod
 
 3. **Set up environment variables:**
 
-   Create a `.env.local` file in the root directory with:
+   Copy the `.env.local.example` file to `.env.local` and add your Groq API key:
    ```
-   GROQ_API_KEY=your_groq_api_key_here
+   cp .env.local.example .env.local
    ```
+   
+   Then edit the `.env.local` file and replace `your_groq_api_key_here` with your actual Groq API key.
+   
+   **IMPORTANT:** Never commit your `.env.local` file to version control. It's already in `.gitignore` to prevent accidental exposure of your API key.
 
 4. **Run the development server:**
 
@@ -72,9 +76,13 @@ A modern web app that analyzes and critiques resumes using Groq's LLaMA-3-8B mod
 3. **Create a new project in Vercel and import your GitHub repository**
 
 4. **Add environment variables:**
-   - Add `GROQ_API_KEY` with your Groq API key
+   - In your Vercel project settings, go to "Environment Variables"
+   - Add a new variable with name `GROQ_API_KEY` and your Groq API key as the value
+   - Make sure to add this to all environments (Production, Preview, and Development)
    
    > **Note:** Groq offers free access to the LLaMA-3-8B model.
+   
+   > **IMPORTANT:** Never commit API keys to your repository. Always use environment variables.
 
 5. **Deploy the application**
    - Vercel will automatically build and deploy your application
