@@ -9,8 +9,9 @@ A modern web app that analyzes and critiques resumes using the Ollama Mistral LL
 - Analyzes your resume using Ollama Mistral
 - Provides actionable feedback for improvement
 - Generates personalized cover letters based on job descriptions
-- Highlights skills that match the job requirements
-- Modern, responsive UI built with React and Tailwind CSS
+- Download generated cover letters as PDF files
+- Responsive design that works on both desktop and mobile devices
+- Modern UI with intuitive navigation
 
 ## Getting Started
 
@@ -19,6 +20,13 @@ A modern web app that analyzes and critiques resumes using the Ollama Mistral LL
 - [Node.js](https://nodejs.org/) (v16+ recommended)
 - [Ollama](https://ollama.com/) running locally with the `mistral` model
 - [Yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/)
+
+### Key Dependencies
+
+- [Next.js](https://nextjs.org/) - React framework
+- [pdf-parse](https://www.npmjs.com/package/pdf-parse) - PDF text extraction
+- [html2pdf.js](https://www.npmjs.com/package/html2pdf.js) - PDF generation
+- [lucide-react](https://lucide.dev/) - Icons
 
 ### Installation
 
@@ -63,8 +71,8 @@ A modern web app that analyzes and critiques resumes using the Ollama Mistral LL
     - `generate-cover-letter.js` - Cover letter generation
 - `components/` - Reusable React components
   - `ResumePanel.js` - Resume text display and analysis
-  - `CoverLetterGenerator.js` - Cover letter generation interface
-- `styles/global.css` - Tailwind CSS and custom styles
+  - `CoverLetterGenerator.js` - Cover letter generation with PDF download capability
+- `styles/global.css` - Global styles and animations
 
 ## API Endpoints
 
@@ -82,6 +90,11 @@ A modern web app that analyzes and critiques resumes using the Ollama Mistral LL
 - Update the prompt in `pages/api/analyze.js` to tailor feedback style.
 - Modify the cover letter generation prompt in `pages/api/generate-cover-letter.js`.
 - Adjust UI in `components/ResumePanel.js`, `components/CoverLetterGenerator.js`, and `pages/index.js` as needed.
+- Customize the PDF format in the `downloadAsPdf` function in `components/CoverLetterGenerator.js`.
+
+## Creator
+
+This project was created by [Joner De Silva](https://www.linkedin.com/in/joner-de-silva-861575203/).
 
 ## License
 
