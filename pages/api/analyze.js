@@ -1,3 +1,11 @@
+import OpenAI from "openai";
+
+// Initialize the OpenAI client with Groq's base URL
+const client = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY || "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",
+  baseURL: "https://api.groq.com/openai/v1",
+});
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
@@ -80,65 +88,29 @@ ${resumeText}
 Please provide a thorough, professional analysis that will genuinely help this candidate improve their resume and job prospects. Be specific, constructive, and actionable in your feedback.`;
 
   try {
-    const ollamaRes = await fetch('http://localhost:11434/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'mistral',
-        prompt: enhancedPrompt,
-        options: {
-          temperature: 0.7,
-          top_p: 0.9,
-          max_tokens: 2000,
-          stop: ["---END---"]
+    // Using Groq API with LLaMA-3-8B model
+    const response = await client.chat.completions.create({
+      model: "llama3-8b-8192",
+      messages: [
+        {
+          role: "system",
+          content: "You are a professional resume expert and career counselor with over 15 years of experience in hiring and talent acquisition."
+        },
+        {
+          role: "user",
+          content: enhancedPrompt
         }
-      }),
+      ],
+      temperature: 0.7,
+      max_tokens: 2000,
     });
 
-    if (!ollamaRes.ok || !ollamaRes.body) {
-      throw new Error(`Ollama API error: ${ollamaRes.status} ${ollamaRes.statusText}`);
-    }
-
-    const reader = ollamaRes.body.getReader();
-    let fullText = '';
-    let responseText = '';
-
-    // Stream processing with better error handling
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        
-        const chunk = new TextDecoder().decode(value);
-        fullText += chunk;
-      }
-    } catch (streamError) {
-      console.error('Streaming error:', streamError);
-      throw new Error('Error reading response stream');
-    }
-
-    // Parse the streamed response
-    const lines = fullText.trim().split('\n').filter(line => line.trim());
-    
-    for (const line of lines) {
-      try {
-        const parsed = JSON.parse(line);
-        if (parsed.response) {
-          responseText += parsed.response;
-        }
-        if (parsed.error) {
-          throw new Error(`Ollama error: ${parsed.error}`);
-        }
-      } catch (parseError) {
-        // Skip malformed JSON lines but log for debugging
-        console.warn('Skipping malformed JSON line:', line);
-        continue;
-      }
-    }
+    // Extract the generated text
+    let responseText = response.choices[0]?.message?.content || '';
 
     // Validate response
     if (!responseText.trim()) {
-      throw new Error('Empty response from Ollama');
+      throw new Error('Empty response from Groq API');
     }
 
     // Post-process the response for better formatting
@@ -164,10 +136,10 @@ Please provide a thorough, professional analysis that will genuinely help this c
     
     // Provide more helpful error messages
     let errorMessage = 'Internal server error';
-    if (err.message.includes('Ollama')) {
+    if (err.message.includes('Groq')) {
       errorMessage = 'AI service temporarily unavailable. Please try again.';
-    } else if (err.message.includes('fetch')) {
-      errorMessage = 'Unable to connect to AI service. Please check if Ollama is running.';
+    } else if (err.message.includes('fetch') || err.message.includes('network')) {
+      errorMessage = 'Unable to connect to AI service. Please try again later.';
     }
 
     res.status(500).json({ 

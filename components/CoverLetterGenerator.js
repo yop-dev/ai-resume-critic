@@ -6,14 +6,7 @@ export default function CoverLetterGenerator({ resumeText }) {
   const [coverLetter, setCoverLetter] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [html2pdf, setHtml2pdf] = useState(null);
-  
-  useEffect(() => {
-    // Dynamically import html2pdf.js on the client side
-    import('html2pdf.js').then(module => {
-      setHtml2pdf(() => module.default);
-    });
-  }, []);
+  // No need for html2pdf state anymore
 
   const generateCoverLetter = async () => {
     if (!resumeText || !jobDescription) {
@@ -49,37 +42,53 @@ export default function CoverLetterGenerator({ resumeText }) {
     setTimeout(() => setCopied(false), 2000);
   };
   
-  const downloadAsPdf = () => {
-    if (!html2pdf) {
-      alert("PDF generator is still loading. Please try again in a moment.");
-      return;
-    }
+  const downloadAsTextFile = () => {
+    // Create a Blob with the text content
+    const blob = new Blob([coverLetter], { type: 'text/plain' });
     
-    // Create a styled HTML element with the cover letter content
+    // Create a URL for the blob
+    const url = URL.createObjectURL(blob);
+    
+    // Create a temporary anchor element
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cover-letter.txt';
+    
+    // Trigger a click on the anchor element
+    document.body.appendChild(a);
+    a.click();
+    
+    // Clean up
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+  
+  // Add the missing downloadAsPdf function
+  const downloadAsPdf = async () => {
+    // Dynamically import html2pdf to avoid SSR issues
+    const html2pdf = (await import('html2pdf.js')).default;
+    
+    // Create a styled div for the PDF content
     const element = document.createElement('div');
-    element.innerHTML = `
-      <div style="font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto;">
-        <h1 style="font-size: 24px; color: #2563eb; margin-bottom: 20px;">Cover Letter</h1>
-        <div style="font-size: 12px; color: #64748b; margin-bottom: 30px;">
-          ${new Date().toLocaleDateString()}
-        </div>
-        <div style="font-size: 14px; line-height: 1.6; white-space: pre-wrap;">
-          ${coverLetter.replace(/\n/g, '<br>')}
-        </div>
-      </div>
-    `;
+    element.style.padding = '40px';
+    element.style.fontFamily = 'Arial, sans-serif';
+    element.style.lineHeight = '1.6';
     
-    // PDF generation options
-    const options = {
-      margin: 10,
+    // Format the cover letter with proper line breaks
+    const formattedCoverLetter = coverLetter.replace(/\n/g, '<br>');
+    element.innerHTML = formattedCoverLetter;
+    
+    // Configure PDF options
+    const opt = {
+      margin: [20, 20, 20, 20],
       filename: 'cover-letter.pdf',
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
+      html2canvas: { scale: 2, useCORS: true },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
     
-    // Generate and download the PDF
-    html2pdf().from(element).set(options).save();
+    // Generate PDF
+    html2pdf().set(opt).from(element).save();
   };
 
   return (

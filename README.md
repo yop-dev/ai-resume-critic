@@ -1,12 +1,12 @@
 # AI Resume Critic
 
-A modern web app that analyzes and critiques resumes using the Ollama Mistral LLM. Upload your PDF resume and receive instant, AI-powered feedback or generate personalized cover letters that highlight your matching skills.
+A modern web app that analyzes and critiques resumes using Groq's LLaMA-3-8B model. Upload your PDF resume and receive instant, AI-powered feedback or generate personalized cover letters that highlight your matching skills.
 
 ## Features
 
 - Upload your resume as a PDF
 - Extracts and previews resume text
-- Analyzes your resume using Ollama Mistral
+- Analyzes your resume using Groq's LLaMA-3-8B model
 - Provides actionable feedback for improvement
 - Generates personalized cover letters based on job descriptions
 - Download generated cover letters as PDF files
@@ -18,7 +18,7 @@ A modern web app that analyzes and critiques resumes using the Ollama Mistral LL
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) (v16+ recommended)
-- [Ollama](https://ollama.com/) running locally with the `mistral` model
+- [Groq API Key](https://console.groq.com/keys) for accessing LLaMA-3-8B model
 - [Yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/)
 
 ### Key Dependencies
@@ -27,6 +27,7 @@ A modern web app that analyzes and critiques resumes using the Ollama Mistral LL
 - [pdf-parse](https://www.npmjs.com/package/pdf-parse) - PDF text extraction
 - [html2pdf.js](https://www.npmjs.com/package/html2pdf.js) - PDF generation
 - [lucide-react](https://lucide.dev/) - Icons
+- [openai](https://www.npmjs.com/package/openai) - OpenAI API client (used with Groq's API)
 
 ### Installation
 
@@ -45,10 +46,11 @@ A modern web app that analyzes and critiques resumes using the Ollama Mistral LL
    yarn install
    ```
 
-3. **Start Ollama with the Mistral model:**
+3. **Set up environment variables:**
 
-   ```sh
-   ollama run mistral
+   Create a `.env.local` file in the root directory with:
+   ```
+   GROQ_API_KEY=your_groq_api_key_here
    ```
 
 4. **Run the development server:**
@@ -60,6 +62,23 @@ A modern web app that analyzes and critiques resumes using the Ollama Mistral LL
    ```
 
 5. **Open [http://localhost:3000](http://localhost:3000) in your browser.**
+
+### Deployment on Vercel
+
+1. **Fork or clone this repository to your GitHub account**
+
+2. **Sign up for a [Vercel](https://vercel.com) account**
+
+3. **Create a new project in Vercel and import your GitHub repository**
+
+4. **Add environment variables:**
+   - Add `GROQ_API_KEY` with your Groq API key
+   
+   > **Note:** Groq offers free access to the LLaMA-3-8B model.
+
+5. **Deploy the application**
+   - Vercel will automatically build and deploy your application
+   - You'll receive a URL for your deployed application
 
 ## Project Structure
 
@@ -80,10 +99,10 @@ A modern web app that analyzes and critiques resumes using the Ollama Mistral LL
   Accepts a base64 PDF, extracts text using `pdf-parse`.
 
 - `POST /api/analyze`  
-  Sends resume text to Ollama Mistral for analysis and returns feedback.
+  Sends resume text to Groq's LLaMA-3-8B model for analysis and returns feedback.
 
 - `POST /api/generate-cover-letter`  
-  Generates a personalized cover letter based on the resume and job description.
+  Generates a personalized cover letter based on the resume and job description using Groq's LLaMA-3-8B model.
 
 ## Customization
 
@@ -102,4 +121,4 @@ MIT
 
 ---
 
-**Powered by [Ollama](https://ollama.com/) and [Mistral](https://mistral.ai/).**
+**Powered by [Groq](https://groq.com/) and [LLaMA-3-8B](https://groq.com/models/llama3-8b-8192).**
