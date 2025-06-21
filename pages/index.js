@@ -366,23 +366,104 @@ export default function Home() {
                   </h2>
                 </div>
                 <div>
-                  <pre style={{
-                    whiteSpace: 'pre-wrap',
-                    color: '#374151',
-                    lineHeight: '1.6',
-                    backgroundColor: '#f9fafb',
-                    padding: '16px',
-                    borderRadius: '8px',
-                    borderLeft: '4px solid #2563eb',
-                    fontFamily: 'system-ui, -apple-system, sans-serif',
-                    fontSize: '14px',
-                    margin: 0,
-                    overflowX: 'auto',
-                    maxWidth: '100%',
-                    boxSizing: 'border-box'
-                  }}>
-                    {feedback}
-                  </pre>
+                  <div>
+                    {typeof feedback === 'string' ? (
+                      <pre style={{
+                        whiteSpace: 'pre-wrap',
+                        color: '#374151',
+                        lineHeight: '1.6',
+                        backgroundColor: '#f9fafb',
+                        padding: '16px',
+                        borderRadius: '8px',
+                        borderLeft: '4px solid #2563eb',
+                        fontFamily: 'system-ui, -apple-system, sans-serif',
+                        fontSize: '14px',
+                        margin: 0,
+                        overflowX: 'auto',
+                        maxWidth: '100%',
+                        boxSizing: 'border-box'
+                      }}>
+                        {feedback}
+                      </pre>
+                    ) : (
+                      Object.entries(feedback).map(([key, value]) => (
+                        <div key={key} style={{ marginBottom: '20px', paddingBottom: '12px', borderBottom: '1px solid #eef2f7' }}>
+                          <h3 style={{
+                            fontSize: '1.125rem', // 18px
+                            fontWeight: '600',
+                            color: '#1e293b', // slate-800
+                            margin: '0 0 10px 0',
+                            display: 'flex',
+                            alignItems: 'center'
+                          }}>
+                            <span style={{
+                              display: 'inline-block',
+                              width: '8px',
+                              height: '8px',
+                              borderRadius: '50%',
+                              backgroundColor: '#3b82f6', // blue-500
+                              marginRight: '10px'
+                            }}></span>
+                            {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                          </h3>
+                          {typeof value === 'string' ? (
+                            <p style={{
+                              whiteSpace: 'pre-wrap',
+                              color: '#475569', // slate-600
+                              lineHeight: '1.7',
+                              fontSize: '0.9rem', // 14.4px
+                              margin: '0 0 0 18px', // Indent content
+                              paddingLeft: '10px',
+                              borderLeft: '2px solid #e2e8f0' // slate-200
+                            }}>{value}</p>
+                          ) : Array.isArray(value) ? (
+                            <ul style={{ margin: '0 0 0 38px', paddingLeft: '0px', listStyleType: 'disc' }}>
+                              {value.map((item, index) => (
+                                <li key={index} style={{
+                                  color: '#475569',
+                                  lineHeight: '1.7',
+                                  fontSize: '0.9rem',
+                                  marginBottom: '6px'
+                                }}>{item}</li>
+                              ))}
+                            </ul>
+                          ) : typeof value === 'object' && value !== null ? (
+                            // Handling nested objects (like sectionBySectionAnalysis)
+                            <div style={{ marginLeft: '18px', paddingLeft: '10px', borderLeft: '2px solid #e2e8f0' }}>
+                              {Object.entries(value).map(([subKey, subValue]) => (
+                                <div key={subKey} style={{ marginTop: '10px' }}>
+                                  <h4 style={{
+                                    fontSize: '1rem', // 16px
+                                    fontWeight: '600',
+                                    color: '#334155', // slate-700
+                                    margin: '0 0 6px 0'
+                                  }}>{subKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</h4>
+                                  <p style={{
+                                    whiteSpace: 'pre-wrap',
+                                    color: '#475569',
+                                    lineHeight: '1.7',
+                                    fontSize: '0.9rem',
+                                    margin: 0,
+                                  }}>{String(subValue)}</p>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            // Fallback for other types
+                            <p style={{
+                              whiteSpace: 'pre-wrap',
+                              color: '#475569',
+                              lineHeight: '1.7',
+                              fontSize: '0.9rem',
+                              margin: '0 0 0 18px',
+                              paddingLeft: '10px',
+                              borderLeft: '2px solid #e2e8f0'
+                            }}>{String(value)}</p>
+                          )}
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
