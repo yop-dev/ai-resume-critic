@@ -27,6 +27,23 @@ export default function Home() {
         if (!res.ok) throw new Error("Failed to extract text from PDF.");
         const data = await res.json();
         setResumeText(data.text);
+        
+        // Auto-scroll to the analyze button on mobile devices after a short delay
+        setTimeout(() => {
+          // Check if it's a mobile device (screen width less than 768px)
+          if (window.innerWidth < 768) {
+            // Create a function to scroll to the resume panel
+            const scrollToResumePanel = () => {
+              const resumePanel = document.querySelector('.resume-panel');
+              if (resumePanel) {
+                resumePanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }
+            };
+            
+            // Execute the scroll after a short delay to ensure the panel is rendered
+            setTimeout(scrollToResumePanel, 500);
+          }
+        }, 300);
       } catch (err) {
         alert(err.message);
       }
@@ -316,7 +333,7 @@ export default function Home() {
 
           {/* Resume Panel */}
           {resumeText && activeTab === "resume-critique" && (
-            <div className="fade-in">
+            <div className="fade-in resume-panel">
               <ResumePanel
                 resumeText={resumeText}
                 setResumeText={setResumeText}

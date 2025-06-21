@@ -326,15 +326,21 @@ export default function CoverLetterGenerator({ resumeText }) {
           border: '1px solid rgba(226, 232, 240, 0.8)',
           animation: 'fadeIn 0.5s ease'
         }}>
+          {/* Header section with responsive design for mobile */}
           <div style={{
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            flexDirection: 'column',
             marginBottom: '16px',
             borderBottom: '1px solid #f1f5f9',
             paddingBottom: '16px'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {/* Title section */}
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '12px',
+              marginBottom: '16px'
+            }}>
               <div style={{
                 backgroundColor: '#ecfdf5',
                 borderRadius: '12px',
@@ -363,7 +369,15 @@ export default function CoverLetterGenerator({ resumeText }) {
                 </p>
               </div>
             </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            
+            {/* Action buttons with improved mobile layout */}
+            <div style={{ 
+              display: 'flex', 
+              flexWrap: 'wrap',
+              gap: '8px',
+              justifyContent: 'flex-start'
+            }}>
+              {/* Regenerate button */}
               <button
                 onClick={() => generateCoverLetter()}
                 disabled={loading}
@@ -371,6 +385,7 @@ export default function CoverLetterGenerator({ resumeText }) {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: '6px',
                   padding: '8px 12px',
                   backgroundColor: loading ? '#94a3b8' : '#8b5cf6',
@@ -381,7 +396,10 @@ export default function CoverLetterGenerator({ resumeText }) {
                   color: 'white',
                   cursor: loading ? 'not-allowed' : 'pointer',
                   transition: 'all 0.2s',
-                  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+                  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                  minWidth: '110px',
+                  flexGrow: 1,
+                  maxWidth: '150px'
                 }}
                 onMouseOver={(e) => {
                   if (!loading) {
@@ -423,11 +441,13 @@ export default function CoverLetterGenerator({ resumeText }) {
                 )}
               </button>
 
+              {/* Copy button */}
               <button
                 onClick={copyToClipboard}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: '6px',
                   padding: '8px 12px',
                   backgroundColor: '#f1f5f9',
@@ -438,6 +458,9 @@ export default function CoverLetterGenerator({ resumeText }) {
                   color: '#475569',
                   cursor: 'pointer',
                   transition: 'background-color 0.2s',
+                  minWidth: '90px',
+                  flexGrow: 1,
+                  maxWidth: '120px'
                 }}
                 onMouseOver={(e) => {
                   e.target.style.backgroundColor = '#e2e8f0';
@@ -459,11 +482,13 @@ export default function CoverLetterGenerator({ resumeText }) {
                 )}
               </button>
               
+              {/* Download PDF button */}
               <button
                 onClick={downloadAsPdf}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: '6px',
                   padding: '8px 12px',
                   backgroundColor: '#0ea5e9',
@@ -474,7 +499,10 @@ export default function CoverLetterGenerator({ resumeText }) {
                   color: 'white',
                   cursor: 'pointer',
                   transition: 'all 0.2s',
-                  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+                  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                  minWidth: '130px',
+                  flexGrow: 1,
+                  maxWidth: '160px'
                 }}
                 onMouseOver={(e) => {
                   e.target.style.backgroundColor = '#0284c7';
@@ -500,7 +528,8 @@ export default function CoverLetterGenerator({ resumeText }) {
             borderLeft: '4px solid #10b981',
             overflowX: 'auto',
             maxWidth: '100%',
-            boxSizing: 'border-box'
+            boxSizing: 'border-box',
+            wordBreak: 'break-word' // Helps with mobile display
           }}>
             <div style={{
               fontFamily: 'system-ui, -apple-system, sans-serif',
@@ -508,28 +537,31 @@ export default function CoverLetterGenerator({ resumeText }) {
               lineHeight: '1.6',
               color: '#334155',
               margin: 0,
-              overflowX: 'auto',
               maxWidth: '100%'
             }}>
-              {coverLetter.split('\n\n').map((paragraph, index) => (
-                <p key={index} style={{
-                  marginBottom: paragraph.includes('Sincerely') || 
-                                paragraph.includes('Regards') || 
-                                paragraph.includes('Best regards') || 
-                                paragraph.includes('Yours') ? '0' : '16px',
-                  marginTop: paragraph.includes('Sincerely') || 
-                            paragraph.includes('Regards') || 
-                            paragraph.includes('Best regards') || 
-                            paragraph.includes('Yours') ? '24px' : '0',
-                }}>
-                  {paragraph.split('\n').map((line, lineIndex) => (
-                    <React.Fragment key={lineIndex}>
-                      {line}
-                      {lineIndex < paragraph.split('\n').length - 1 && <br />}
-                    </React.Fragment>
-                  ))}
-                </p>
-              ))}
+              {coverLetter.split('\n\n').map((paragraph, index) => {
+                // Check if this is a signature line
+                const isSignature = paragraph.includes('Sincerely') || 
+                                   paragraph.includes('Regards') || 
+                                   paragraph.includes('Best regards') || 
+                                   paragraph.includes('Yours');
+                
+                return (
+                  <p key={index} style={{
+                    marginBottom: isSignature ? '0' : '16px',
+                    marginTop: isSignature ? '24px' : '0',
+                    padding: '0',
+                    textAlign: 'left'
+                  }}>
+                    {paragraph.split('\n').map((line, lineIndex) => (
+                      <React.Fragment key={lineIndex}>
+                        {line}
+                        {lineIndex < paragraph.split('\n').length - 1 && <br />}
+                      </React.Fragment>
+                    ))}
+                  </p>
+                );
+              })}
             </div>
           </div>
         </div>
