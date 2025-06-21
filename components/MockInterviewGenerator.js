@@ -90,21 +90,22 @@ export default function MockInterviewGenerator({ resumeText }) {
             Job Description (optional)
           </label>
           
-          <textarea
-            placeholder="Paste the job description here to get more targeted interview questions..."
-            value={jobDescription}
-            onChange={(e) => setJobDescription(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '12px',
-              borderRadius: '8px',
-              border: '1px solid #d1d5db',
-              minHeight: '120px',
-              fontFamily: 'inherit',
-              resize: 'vertical',
-              marginBottom: '16px'
-            }}
-          />
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+            <textarea
+              placeholder="Paste the job description here to get more targeted interview questions..."
+              value={jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '12px',
+                borderRadius: '8px',
+                border: '1px solid #d1d5db',
+                minHeight: '120px',
+                fontFamily: 'inherit',
+                resize: 'vertical'
+              }}
+            />
+          </div>
           
           <button
             onClick={generateMockInterview}
