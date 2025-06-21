@@ -15,18 +15,50 @@ export default async function handler(req, res) {
   }
 
   // Enhanced prompt for personalized cover letter generation
+  // Add a small random element to ensure variation when regenerating
+  const variation = Math.floor(Math.random() * 5);
+  const styleVariations = [
+    "professional and formal",
+    "confident and impactful",
+    "enthusiastic and engaging",
+    "concise and direct",
+    "detailed and comprehensive"
+  ];
+  
   const enhancedPrompt = `You are a professional career advisor with expertise in creating personalized cover letters. 
-Create a compelling cover letter based on the candidate's resume and the job description provided.
+Create a compelling cover letter in a ${styleVariations[variation]} style based on the candidate's resume and the job description provided.
+
+First, analyze the resume to extract:
+1. The candidate's name, contact information, and current role
+2. Key skills and qualifications that match the job requirements
+3. Relevant work experiences and achievements
+4. Educational background and certifications
+5. Any unique selling points or standout accomplishments
+
+Then, analyze the job description to identify:
+1. The specific role title and company name (if available)
+2. Key requirements and qualifications sought
+3. Company values or culture indicators
+4. Specific technologies, tools, or methodologies mentioned
+
+IMPORTANT FORMATTING INSTRUCTIONS:
+- Start directly with the cover letter content - DO NOT include any introductory text like "Here is a cover letter..."
+- DO NOT include any explanatory text at the end like "This cover letter is tailored..."
+- Use proper paragraph spacing with blank lines between paragraphs
+- Format the letter professionally with proper sections
+- End with an appropriate signature line (like "Sincerely," followed by the candidate's name)
+- Ensure proper spacing throughout the document
 
 The cover letter should:
 1. Be professionally formatted with proper sections (greeting, introduction, body paragraphs, conclusion, signature)
-2. Highlight the most relevant skills and experiences from the resume that match the job requirements
-3. Show enthusiasm for the specific role and company
-4. Be concise (around 300-400 words)
-5. Include a call to action in the closing paragraph
-6. Be personalized and not generic
-7. Use professional but engaging language
-8. Address specific requirements mentioned in the job description
+2. Use the candidate's actual name and contact details from the resume
+3. Directly reference 3-5 specific skills/experiences from the resume that align with key job requirements
+4. Include at least one quantifiable achievement from the resume that demonstrates value
+5. Show enthusiasm for the specific role and company
+6. Be concise (around 300-400 words)
+7. Include a call to action in the closing paragraph
+8. Use professional but engaging language
+9. Address specific requirements mentioned in the job description
 
 Resume:
 ${resumeText}
@@ -34,7 +66,7 @@ ${resumeText}
 Job Description:
 ${jobDescription}
 
-Please create a complete, ready-to-use cover letter that the candidate can personalize further if needed.`;
+Remember: Provide ONLY the cover letter content with no explanatory text before or after.`;
 
   try {
     // Using Groq API with LLaMA-3-8B model
@@ -61,6 +93,15 @@ Please create a complete, ready-to-use cover letter that the candidate can perso
     if (!responseText.trim()) {
       throw new Error('Empty response from Groq API');
     }
+    
+    // Clean up the response by removing any introductory or concluding meta-text
+    responseText = responseText
+      .replace(/^(Here is a|I've created a|This is a|Below is a|Please find a).*?(cover letter|draft).*?\n+/i, '')
+      .replace(/\n+This cover letter is tailored.*$/i, '')
+      .replace(/\n+The cover letter is tailored.*$/i, '')
+      .replace(/\n+This letter highlights.*$/i, '')
+      .replace(/\n+Feel free to.*$/i, '')
+      .trim();
 
     // Log successful generation (optional, remove in production)
     console.log(`Successfully generated cover letter for job description of ${jobDescription.length} characters`);

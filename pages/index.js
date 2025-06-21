@@ -404,7 +404,7 @@ export default function Home() {
               marginBottom: '8px'
             }}>
               <span>Powered by</span>
-              <span style={{ fontWeight: '600', color: '#2563eb' }}>OpenAI GPT-3.5</span>
+              <span style={{ fontWeight: '600', color: '#2563eb' }}>Groq llama3-8b-8192</span>
             </div>
             <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'center', gap: '16px' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>

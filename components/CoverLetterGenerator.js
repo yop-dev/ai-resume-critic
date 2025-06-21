@@ -63,32 +63,118 @@ export default function CoverLetterGenerator({ resumeText }) {
     URL.revokeObjectURL(url);
   };
   
-  // Add the missing downloadAsPdf function
+  // Completely revamped downloadAsPdf function using pure text rendering
   const downloadAsPdf = async () => {
-    // Dynamically import html2pdf to avoid SSR issues
-    const html2pdf = (await import('html2pdf.js')).default;
-    
-    // Create a styled div for the PDF content
-    const element = document.createElement('div');
-    element.style.padding = '40px';
-    element.style.fontFamily = 'Arial, sans-serif';
-    element.style.lineHeight = '1.6';
-    
-    // Format the cover letter with proper line breaks
-    const formattedCoverLetter = coverLetter.replace(/\n/g, '<br>');
-    element.innerHTML = formattedCoverLetter;
-    
-    // Configure PDF options
-    const opt = {
-      margin: [20, 20, 20, 20],
-      filename: 'cover-letter.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    
-    // Generate PDF
-    html2pdf().set(opt).from(element).save();
+    try {
+      // Dynamically import jsPDF for text-based PDF generation
+      const { jsPDF } = await import('jspdf');
+      
+      // Create a new PDF document
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+      
+      // Set up document properties
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 25; // 25mm margins
+      const contentWidth = pageWidth - (margin * 2);
+      
+      // Set font
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(11);
+      
+      // Current Y position tracker
+      let yPos = margin;
+      
+      // Add the date
+      doc.text(formatDate(new Date()), margin, yPos);
+      yPos += 10;
+      
+      // Process the cover letter content
+      const paragraphs = coverLetter
+        .split(/\n\s*\n/)
+        .filter(p => p.trim().length > 0);
+      
+      // Text wrapping and pagination function
+      const addWrappedText = (text, x, y, maxWidth, lineHeight) => {
+        // Split the text into words
+        const words = text.split(' ');
+        let line = '';
+        let currentY = y;
+        
+        for (let i = 0; i < words.length; i++) {
+          const word = words[i];
+          const testLine = line + (line ? ' ' : '') + word;
+          const testWidth = doc.getStringUnitWidth(testLine) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+          
+          if (testWidth > maxWidth) {
+            // Add the current line
+            doc.text(line, x, currentY);
+            line = word;
+            currentY += lineHeight;
+            
+            // Check if we need a new page
+            if (currentY > pageHeight - margin) {
+              doc.addPage();
+              currentY = margin;
+            }
+          } else {
+            line = testLine;
+          }
+        }
+        
+        // Add the last line
+        if (line) {
+          doc.text(line, x, currentY);
+          currentY += lineHeight;
+        }
+        
+        return currentY;
+      };
+      
+      // Process each paragraph
+      for (let i = 0; i < paragraphs.length; i++) {
+        const paragraph = paragraphs[i];
+        
+        // Handle signature lines differently
+        if (paragraph.includes('Sincerely') || 
+            paragraph.includes('Regards') || 
+            paragraph.includes('Best regards') || 
+            paragraph.includes('Yours')) {
+          yPos += 5; // Add extra space before signature
+        }
+        
+        // Process the paragraph with line wrapping
+        yPos = addWrappedText(paragraph, margin, yPos, contentWidth, 6);
+        
+        // Add space between paragraphs
+        yPos += 5;
+        
+        // Check if we need a new page for the next paragraph
+        if (i < paragraphs.length - 1 && yPos > pageHeight - margin - 15) {
+          doc.addPage();
+          yPos = margin;
+        }
+      }
+      
+      // Save the PDF
+      doc.save('cover-letter.pdf');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('There was an error generating the PDF. Please try again.');
+    }
+  };
+  
+  // Helper function to format the current date
+  const formatDate = (date) => {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
   };
 
   return (
@@ -279,6 +365,65 @@ export default function CoverLetterGenerator({ resumeText }) {
             </div>
             <div style={{ display: 'flex', gap: '8px' }}>
               <button
+                onClick={() => generateCoverLetter()}
+                disabled={loading}
+                title="Generate a new version of the cover letter with different wording and style"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '8px 12px',
+                  backgroundColor: loading ? '#94a3b8' : '#8b5cf6',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  color: 'white',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.2s',
+                  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+                }}
+                onMouseOver={(e) => {
+                  if (!loading) {
+                    e.target.style.backgroundColor = '#7c3aed';
+                    e.target.style.transform = 'translateY(-1px)';
+                    e.target.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+                  }
+                }}
+                onMouseOut={(e) => {
+                  if (!loading) {
+                    e.target.style.backgroundColor = '#8b5cf6';
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
+                  }
+                }}
+              >
+                {loading ? (
+                  <>
+                    <div style={{
+                      width: '16px',
+                      height: '16px',
+                      border: '2px solid rgba(255, 255, 255, 0.3)',
+                      borderTop: '2px solid white',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite'
+                    }}></div>
+                    <span>Regenerating...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                      <path d="M21 3v5h-5"></path>
+                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                      <path d="M8 16H3v5"></path>
+                    </svg>
+                    <span>Regenerate</span>
+                  </>
+                )}
+              </button>
+
+              <button
                 onClick={copyToClipboard}
                 style={{
                   display: 'flex',
@@ -357,8 +502,7 @@ export default function CoverLetterGenerator({ resumeText }) {
             maxWidth: '100%',
             boxSizing: 'border-box'
           }}>
-            <pre style={{
-              whiteSpace: 'pre-wrap',
+            <div style={{
               fontFamily: 'system-ui, -apple-system, sans-serif',
               fontSize: '14px',
               lineHeight: '1.6',
@@ -367,8 +511,26 @@ export default function CoverLetterGenerator({ resumeText }) {
               overflowX: 'auto',
               maxWidth: '100%'
             }}>
-              {coverLetter}
-            </pre>
+              {coverLetter.split('\n\n').map((paragraph, index) => (
+                <p key={index} style={{
+                  marginBottom: paragraph.includes('Sincerely') || 
+                                paragraph.includes('Regards') || 
+                                paragraph.includes('Best regards') || 
+                                paragraph.includes('Yours') ? '0' : '16px',
+                  marginTop: paragraph.includes('Sincerely') || 
+                            paragraph.includes('Regards') || 
+                            paragraph.includes('Best regards') || 
+                            paragraph.includes('Yours') ? '24px' : '0',
+                }}>
+                  {paragraph.split('\n').map((line, lineIndex) => (
+                    <React.Fragment key={lineIndex}>
+                      {line}
+                      {lineIndex < paragraph.split('\n').length - 1 && <br />}
+                    </React.Fragment>
+                  ))}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
       )}
