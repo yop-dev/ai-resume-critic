@@ -113,10 +113,10 @@ Please provide a thorough, professional analysis that will genuinely help this c
       throw new Error('Empty response from Groq API');
     }
 
-    // Post-process the response for better formatting
+    // Keep the markdown formatting for section headers and enhance subsection headers
     const formattedResponse = responseText
-      .replace(/\*\*(.*?)\*\*/g, '$1') // Remove markdown bold formatting for cleaner display
       .replace(/\*([^*]+)\*/g, '• $1') // Convert single asterisks to bullet points
+      .replace(/^(\*[^:]+:)/gm, '### $1') // Mark subsection headers with ###
       .trim();
 
     // Log successful analysis (optional, remove in production)

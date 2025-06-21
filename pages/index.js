@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Upload, FileText, Sparkles, BarChart3, FileEdit, ClipboardCheck, Linkedin } from "lucide-react";
+import { useState, useEffect } from "react";
+import Head from "next/head";
+import { Upload, FileText, Sparkles, BarChart3, FileEdit, ClipboardCheck, Linkedin, Github, Globe } from "lucide-react";
 import ResumePanel from "../components/ResumePanel";
 import CoverLetterGenerator from "../components/CoverLetterGenerator";
 
@@ -8,6 +9,21 @@ export default function Home() {
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Check if device is mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
   const [activeTab, setActiveTab] = useState("resume-critique"); // "resume-critique" or "cover-letter"
 
   const handleFileUpload = async (file) => {
@@ -92,6 +108,11 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>CareerLaunch AI</title>
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="description" content="Smart Resume Review & Cover Letter Generator" />
+      </Head>
       <style>{`
         @keyframes spin {
           0% { transform: rotate(0deg); }
@@ -134,40 +155,6 @@ export default function Home() {
         padding: '16px',
         position: 'relative'
       }}>
-        {/* LinkedIn Profile Link */}
-        <a 
-          href="https://www.linkedin.com/in/joner-de-silva-861575203/" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          title="Creator's LinkedIn Profile"
-          aria-label="Creator's LinkedIn Profile"
-          style={{
-            position: 'absolute',
-            top: '16px',
-            right: '16px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '10px',
-            backgroundColor: '#0077b5',
-            color: 'white',
-            borderRadius: '50%',
-            textDecoration: 'none',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-            transition: 'transform 0.2s, box-shadow 0.2s',
-            zIndex: 10
-          }}
-          onMouseOver={(e) => {
-            e.target.style.transform = 'translateY(-2px)';
-            e.target.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
-          }}
-          onMouseOut={(e) => {
-            e.target.style.transform = 'translateY(0)';
-            e.target.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
-          }}
-        >
-          <Linkedin size={22} />
-        </a>
         
         <div style={{
           maxWidth: '1024px',
@@ -183,16 +170,31 @@ export default function Home() {
             paddingTop: '32px'
           }}>
             <h1 style={{
-              fontSize: '48px',
+              fontSize: isMobile ? '36px' : '48px',
               fontWeight: 'bold',
               background: 'linear-gradient(to right, #2563eb, #7c3aed)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
               margin: '0 0 16px 0',
-              fontFamily: 'system-ui, -apple-system, sans-serif'
+              fontFamily: 'system-ui, -apple-system, sans-serif',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
-              AI Resume Critic
+              <div className="logo-container" style={{ display: 'inline-flex' }}>
+                <img 
+                  src="/logo.png" 
+                  alt="CareerLaunch AI Logo" 
+                  className="transparent-logo"
+                  style={{
+                    height: isMobile ? '60px' : '80px',
+                    width: 'auto',
+                    verticalAlign: 'middle'
+                  }}
+                />
+              </div>
+              CareerLaunch AI
             </h1>
             <p style={{
               color: '#6b7280',
@@ -406,6 +408,180 @@ export default function Home() {
           )}
 
           {/* Footer */}
+          {/* Contact Me Section */}
+          <section style={{
+            marginTop: '40px',
+            padding: isMobile ? '16px 8px' : '24px 16px',
+            borderTop: '1px solid #e5e7eb',
+            textAlign: 'center',
+            background: 'linear-gradient(135deg, #f0f9ff, #e0f2fe, #dbeafe, #e0f2fe)',
+            backgroundSize: '400% 400%',
+            animation: 'subtleShift 15s ease infinite',
+            borderRadius: '8px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '4px',
+              background: 'linear-gradient(to right, #2563eb, #7c3aed)'
+            }}></div>
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundImage: 'radial-gradient(#2563eb 1px, transparent 1px)',
+              backgroundSize: '20px 20px',
+              opacity: 0.05,
+              pointerEvents: 'none'
+            }}></div>
+            <div style={{
+              marginBottom: isMobile ? '12px' : '16px',
+              textAlign: 'center',
+              position: 'relative',
+              zIndex: 1
+            }}>
+              <h2 style={{
+                fontSize: isMobile ? '16px' : '18px',
+                fontWeight: '600',
+                color: '#2563eb',
+                margin: '0 0 4px 0',
+                letterSpacing: '0.5px'
+              }}>Made By</h2>
+              
+              <h3 style={{
+                fontSize: isMobile ? '15px' : '17px',
+                fontWeight: '600',
+                color: '#111827',
+                margin: '0',
+                letterSpacing: '0.3px'
+              }}>Joner De Silva</h3>
+            </div>
+            
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: isMobile ? '12px' : '16px',
+              flexWrap: 'wrap',
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: '100%'
+            }}>
+              {/* LinkedIn Link */}
+              <a 
+                href="https://www.linkedin.com/in/joner-de-silva-861575203/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                title="LinkedIn Profile"
+                className="social-link"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: isMobile ? '6px 12px' : '8px 16px',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  color: 'white',
+                  fontWeight: '500',
+                  fontSize: isMobile ? '14px' : '16px',
+                  backgroundColor: '#0077b5',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+                  width: 'auto',
+                  justifyContent: 'center'
+                }}
+                onClick={(e) => {
+                  // Try to open LinkedIn app on mobile
+                  if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                    const linkedInAppUrl = "linkedin://profile/joner-de-silva-861575203";
+                    const webUrl = "https://www.linkedin.com/in/joner-de-silva-861575203/";
+                    
+                    // Create a hidden iframe to try opening the app
+                    const iframe = document.createElement('iframe');
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+                    
+                    // Set a timeout to redirect to web URL if app doesn't open
+                    setTimeout(() => {
+                      window.location.href = webUrl;
+                    }, 500);
+                    
+                    // Try to open the app
+                    iframe.src = linkedInAppUrl;
+                    
+                    // Prevent default link behavior
+                    e.preventDefault();
+                  }
+                }}
+              >
+                <Linkedin size={isMobile ? 16 : 18} style={{ flexShrink: 0 }} />
+                <span>LinkedIn</span>
+              </a>
+              
+              {/* GitHub Link */}
+              <a 
+                href="https://github.com/yop-dev" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                title="GitHub Profile"
+                className="social-link"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: isMobile ? '6px 12px' : '8px 16px',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  color: 'white',
+                  fontWeight: '500',
+                  fontSize: isMobile ? '14px' : '16px',
+                  backgroundColor: '#24292e',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+                  width: 'auto',
+                  justifyContent: 'center'
+                }}
+              >
+                <Github size={isMobile ? 16 : 18} style={{ flexShrink: 0 }} />
+                <span>GitHub</span>
+              </a>
+              
+              {/* Portfolio Link */}
+              <a 
+                href="https://portfolio-theta-two-19.vercel.app" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                title="Personal Website"
+                className="social-link"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: isMobile ? '6px 12px' : '8px 16px',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  color: 'white',
+                  fontWeight: '500',
+                  fontSize: isMobile ? '14px' : '16px',
+                  backgroundColor: '#4f46e5',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+                  width: 'auto',
+                  justifyContent: 'center'
+                }}
+              >
+                <Globe size={isMobile ? 16 : 18} style={{ flexShrink: 0 }} />
+                <span>Portfolio</span>
+              </a>
+            </div>
+          </section>
+
           <footer style={{
             textAlign: 'center',
             color: '#6b7280',
@@ -432,7 +608,7 @@ export default function Home() {
               </span>
             </div>
             <p style={{ margin: 0 }}>
-              &copy; {new Date().getFullYear()} AI Resume Critic. All rights reserved.
+              &copy; {new Date().getFullYear()} CareerLaunch AI. All rights reserved.
             </p>
           </footer>
         </div>
