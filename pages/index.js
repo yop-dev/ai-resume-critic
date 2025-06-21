@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
-import { Upload, FileText, Sparkles, BarChart3, FileEdit, ClipboardCheck, Linkedin, Github, Globe, MessageSquare } from "lucide-react";
+import { Upload, FileText, Sparkles, BarChart3, FileEdit, ClipboardCheck, Linkedin, Github, Globe, MessageSquare, BarChart } from "lucide-react";
 import ResumePanel from "../components/ResumePanel";
 import CoverLetterGenerator from "../components/CoverLetterGenerator";
 import MockInterviewGenerator from "../components/MockInterviewGenerator";
@@ -233,7 +233,7 @@ export default function Home() {
               margin: '0 auto',
               lineHeight: '1.6'
             }}>
-              Get intelligent feedback on your resume with AI-powered analysis or generate personalized cover letters that highlight your matching skills. Upload your PDF to get started.
+              Upload your resume to get AI-powered feedback, personalized cover letters tailored to the job, and mock interview questions to help you practice and stand out.
             </p>
           </div>
 
@@ -687,6 +687,10 @@ export default function Home() {
               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <FileEdit size={14} color="#4b5563" /> Cover Letter Generation
               </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <MessageSquare size={14} color="#4b5563" /> Mock Interview Questions
+              </span>
+            
             </div>
             <p style={{ margin: 0 }}>
               &copy; {new Date().getFullYear()} CareerLaunch AI. All rights reserved.
