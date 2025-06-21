@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
-import { Upload, FileText, Sparkles, BarChart3, FileEdit, ClipboardCheck, Linkedin, Github, Globe } from "lucide-react";
+import { Upload, FileText, Sparkles, BarChart3, FileEdit, ClipboardCheck, Linkedin, Github, Globe, MessageSquare } from "lucide-react";
 import ResumePanel from "../components/ResumePanel";
 import CoverLetterGenerator from "../components/CoverLetterGenerator";
+import MockInterviewGenerator from "../components/MockInterviewGenerator";
 
 export default function Home() {
   const [resumeText, setResumeText] = useState("");
@@ -24,7 +25,7 @@ export default function Home() {
       window.removeEventListener('resize', checkIfMobile);
     };
   }, []);
-  const [activeTab, setActiveTab] = useState("resume-critique"); // "resume-critique" or "cover-letter"
+  const [activeTab, setActiveTab] = useState("resume-critique"); // "resume-critique", "cover-letter", or "mock-interview"
 
   const handleFileUpload = async (file) => {
     if (!file || file.type !== "application/pdf") {
@@ -146,6 +147,35 @@ export default function Home() {
         .upload-area.drag-over {
           border-color: #2563eb;
           background-color: rgba(219, 234, 254, 0.5);
+        }
+
+        .tab-button {
+          transition: all 0.2s ease;
+        }
+
+        .tab-button:hover {
+          background-color: rgba(37, 99, 235, 0.1);
+        }
+
+        .tab-button.active {
+          background-color: rgba(37, 99, 235, 0.1);
+        }
+
+        @media (max-width: 768px) {
+          .tab-container {
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+          }
+          
+          .tab-container::-webkit-scrollbar {
+            display: none;
+          }
+          
+          .tab-button {
+            flex-shrink: 0;
+            white-space: nowrap;
+          }
         }
       `}</style>
       
@@ -286,48 +316,92 @@ export default function Home() {
           {/* Tab Navigation */}
           {resumeText && (
             <div className="fade-in" style={{ marginBottom: '24px' }}>
-              <div style={{
-                display: 'flex',
-                borderBottom: '1px solid #e5e7eb',
-                marginBottom: '24px'
-              }}>
+              <div 
+                className="tab-container"
+                style={{
+                  display: 'flex',
+                  borderBottom: '1px solid #e5e7eb',
+                  marginBottom: '24px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                  borderRadius: '12px 12px 0 0',
+                  padding: isMobile ? '8px' : '12px',
+                  gap: isMobile ? '4px' : '8px',
+                  overflowX: isMobile ? 'auto' : 'visible',
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none'
+                }}
+              >
                 <button
+                  className={`tab-button ${activeTab === "resume-critique" ? 'active' : ''}`}
                   onClick={() => setActiveTab("resume-critique")}
                   style={{
-                    padding: '12px 24px',
-                    fontWeight: activeTab === "resume-critique" ? '600' : '400',
+                    padding: isMobile ? '10px 12px' : '12px 20px',
+                    fontWeight: activeTab === "resume-critique" ? '600' : '500',
                     color: activeTab === "resume-critique" ? '#2563eb' : '#6b7280',
-                    borderBottom: activeTab === "resume-critique" ? '2px solid #2563eb' : 'none',
+                    borderBottom: activeTab === "resume-critique" ? '2px solid #2563eb' : '2px solid transparent',
                     background: 'transparent',
                     border: 'none',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px',
-                    fontSize: '16px'
+                    gap: isMobile ? '6px' : '8px',
+                    fontSize: isMobile ? '14px' : '16px',
+                    borderRadius: '8px',
+                    flexShrink: 0,
+                    whiteSpace: 'nowrap',
+                    minWidth: 'fit-content'
                   }}
                 >
-                  <BarChart3 size={18} />
-                  Resume Critique
+                  <BarChart3 size={isMobile ? 16 : 18} />
+                  <span>{isMobile ? 'Critique' : 'Resume Critique'}</span>
                 </button>
                 <button
+                  className={`tab-button ${activeTab === "cover-letter" ? 'active' : ''}`}
                   onClick={() => setActiveTab("cover-letter")}
                   style={{
-                    padding: '12px 24px',
-                    fontWeight: activeTab === "cover-letter" ? '600' : '400',
+                    padding: isMobile ? '10px 12px' : '12px 20px',
+                    fontWeight: activeTab === "cover-letter" ? '600' : '500',
                     color: activeTab === "cover-letter" ? '#2563eb' : '#6b7280',
-                    borderBottom: activeTab === "cover-letter" ? '2px solid #2563eb' : 'none',
+                    borderBottom: activeTab === "cover-letter" ? '2px solid #2563eb' : '2px solid transparent',
                     background: 'transparent',
                     border: 'none',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px',
-                    fontSize: '16px'
+                    gap: isMobile ? '6px' : '8px',
+                    fontSize: isMobile ? '14px' : '16px',
+                    borderRadius: '8px',
+                    flexShrink: 0,
+                    whiteSpace: 'nowrap',
+                    minWidth: 'fit-content'
                   }}
                 >
-                  <FileEdit size={18} />
-                  Cover Letter Generator
+                  <FileEdit size={isMobile ? 16 : 18} />
+                  <span>{isMobile ? 'Cover Letter' : 'Cover Letter Generator'}</span>
+                </button>
+                <button
+                  className={`tab-button ${activeTab === "mock-interview" ? 'active' : ''}`}
+                  onClick={() => setActiveTab("mock-interview")}
+                  style={{
+                    padding: isMobile ? '10px 12px' : '12px 20px',
+                    fontWeight: activeTab === "mock-interview" ? '600' : '500',
+                    color: activeTab === "mock-interview" ? '#2563eb' : '#6b7280',
+                    borderBottom: activeTab === "mock-interview" ? '2px solid #2563eb' : '2px solid transparent',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: isMobile ? '6px' : '8px',
+                    fontSize: isMobile ? '14px' : '16px',
+                    borderRadius: '8px',
+                    flexShrink: 0,
+                    whiteSpace: 'nowrap',
+                    minWidth: 'fit-content'
+                  }}
+                >
+                  <MessageSquare size={isMobile ? 16 : 18} />
+                  <span>{isMobile ? 'Interview' : 'Mock Interview'}</span>
                 </button>
               </div>
             </div>
@@ -349,6 +423,13 @@ export default function Home() {
           {resumeText && activeTab === "cover-letter" && (
             <div className="fade-in">
               <CoverLetterGenerator resumeText={resumeText} />
+            </div>
+          )}
+
+          {/* Mock Interview Generator */}
+          {resumeText && activeTab === "mock-interview" && (
+            <div className="fade-in">
+              <MockInterviewGenerator resumeText={resumeText} />
             </div>
           )}
 
