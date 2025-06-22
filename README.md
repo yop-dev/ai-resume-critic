@@ -35,8 +35,8 @@ A comprehensive career toolkit powered by AI that helps job seekers improve thei
 1. **Clone the repository:**
 
    ```sh
-   git clone https://github.com/yop-dev/ai-resume-critic.git
-   cd ai-resume-critic
+   git clone https://github.com/yop-dev/career-launch-ai.git
+   cd career-launch-ai
    ```
 
 2. **Install dependencies:**
