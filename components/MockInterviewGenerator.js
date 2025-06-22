@@ -276,7 +276,7 @@ export default function MockInterviewGenerator({
             {loading ? (
               <>
                 <div className="animate-spin" style={{ width: '16px', height: '16px', border: '2px solid white', borderTopColor: 'transparent', borderRadius: '50%' }}></div>
-                Generating Questions...
+                Generating Questions, Please Wait...
               </>
             ) : (
               <>
