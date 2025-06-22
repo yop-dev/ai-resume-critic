@@ -25,6 +25,8 @@ test-*.js
 .env.test.local
 .env.production.local
 .env*.local
+.env.example
+.env.*.example
 
 # Debug
 npm-debug.log*
