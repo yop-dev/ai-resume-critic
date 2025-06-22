@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sparkles, MessageSquare } from 'lucide-react';
 
 // Function to format interview questions with proper spacing and styling
@@ -29,7 +29,7 @@ const formatInterviewQuestions = (text) => {
     if (section.title) {
       // Add section header
       processedHtml += `<div style="margin:${index === 0 ? '0' : '32px'} 0 20px;padding-bottom:10px;border-bottom:2px solid #4f46e5;background-color:#f5f3ff;padding:12px;border-radius:8px;">
-        <h3 style="color:#4f46e5;font-size:20px;margin:0;font-weight:700;display:flex;align-items:center;">
+        <h3 style="color:#4f46e5;font-size:clamp(16px, 5vw, 20px);margin:0;font-weight:700;display:flex;align-items:center;flex-wrap:wrap;">
           <span style="display:inline-block;width:6px;height:24px;background-color:#4f46e5;margin-right:10px;border-radius:3px;"></span>
           ${section.title}
         </h3>
@@ -41,8 +41,8 @@ const formatInterviewQuestions = (text) => {
       // Handle bullet points
       let content = section.content.replace(/• ([^•\n]+)/g, 
         '<div style="display:flex;margin:12px 0;align-items:flex-start;padding:8px 0;">' +
-          '<div style="color:#4f46e5;margin-right:10px;font-size:18px;">•</div>' +
-          '<div style="flex:1;color:#4b5563;">$1</div>' +
+          '<div style="color:#4f46e5;margin-right:10px;font-size:clamp(16px, 4vw, 18px);">•</div>' +
+          '<div style="flex:1;color:#4b5563;font-size:clamp(14px, 4vw, 16px);">$1</div>' +
         '</div>'
       );
       
@@ -115,9 +115,9 @@ const formatInterviewQuestions = (text) => {
         
         processedContent += `<div style="display:flex;margin:20px 0;align-items:flex-start;background-color:#f8fafc;padding:12px;border-radius:8px;border-left:3px solid ${badgeColor};">
           <div style="margin-right:12px;min-width:28px;text-align:center;">
-            <div style="color:${badgeColor};font-weight:700;font-size:16px;">${number}.</div>
+            <div style="color:${badgeColor};font-weight:700;font-size:clamp(14px, 4vw, 16px);">${number}.</div>
           </div>
-          <div style="flex:1;">${questionText}</div>
+          <div style="flex:1;font-size:clamp(14px, 4vw, 16px);">${questionText}</div>
         </div>`;
         
         lastQuestionIndex = questionMatch.index + questionMatch[0].length;
@@ -152,6 +152,21 @@ export default function MockInterviewGenerator({
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
 
   const generateMockInterview = async () => {
     if (!resumeText) {
@@ -196,13 +211,17 @@ export default function MockInterviewGenerator({
         borderRadius: '16px',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
         border: '1px solid rgba(255, 255, 255, 0.2)',
-        padding: '24px',
-        marginBottom: '32px'
+        padding: isMobile ? '16px' : '24px',
+        marginBottom: '32px',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
         <div style={{
           display: 'flex',
           alignItems: 'center',
           gap: '12px',
+          flexDirection: isMobile ? 'column' : 'row',
+          textAlign: isMobile ? 'center' : 'left',
           marginBottom: '20px'
         }}>
           <div style={{
@@ -213,7 +232,7 @@ export default function MockInterviewGenerator({
             <MessageSquare size={20} color="#4f46e5" />
           </div>
           <h2 style={{
-            fontSize: '20px',
+            fontSize: isMobile ? '18px' : '20px',
             fontWeight: '600',
             color: '#1f2937',
             margin: 0
@@ -223,7 +242,11 @@ export default function MockInterviewGenerator({
         </div>
 
         <div style={{ marginBottom: '20px' }}>
-          <p style={{ color: '#4b5563', marginBottom: '16px' }}>
+          <p style={{ 
+            color: '#4b5563', 
+            marginBottom: '16px',
+            fontSize: isMobile ? '14px' : '16px'
+          }}>
             Generate realistic interview questions based on your resume and the job description you're applying for.
           </p>
           
@@ -231,7 +254,8 @@ export default function MockInterviewGenerator({
             display: 'block',
             marginBottom: '8px',
             fontWeight: '500',
-            color: '#4b5563'
+            color: '#4b5563',
+            fontSize: isMobile ? '14px' : '16px'
           }}>
             Job Description (optional)
           </label>
@@ -243,12 +267,15 @@ export default function MockInterviewGenerator({
               onChange={(e) => setJobDescription(e.target.value)}
               style={{
                 width: '100%',
-                padding: '12px',
+                padding: isMobile ? '10px' : '12px',
                 borderRadius: '8px',
                 border: '1px solid #d1d5db',
-                minHeight: '120px',
+                minHeight: isMobile ? '100px' : '120px',
                 fontFamily: 'inherit',
-                resize: 'vertical'
+                resize: 'vertical',
+                fontSize: isMobile ? '14px' : '16px',
+                WebkitAppearance: 'none',
+                appearance: 'none'
               }}
             />
           </div>
@@ -261,7 +288,7 @@ export default function MockInterviewGenerator({
               alignItems: 'center',
               justifyContent: 'center',
               gap: '8px',
-              padding: '10px 20px',
+              padding: isMobile ? '10px 16px' : '10px 20px',
               background: loading ? '#9ca3af' : 'linear-gradient(to right, #4f46e5, #7c3aed)',
               color: 'white',
               borderRadius: '8px',
@@ -269,7 +296,8 @@ export default function MockInterviewGenerator({
               fontWeight: '500',
               cursor: loading ? 'not-allowed' : 'pointer',
               transition: 'all 0.2s ease',
-              width: '100%'
+              width: '100%',
+              fontSize: isMobile ? '14px' : '16px'
             }}
             className="upload-button"
           >
@@ -296,22 +324,23 @@ export default function MockInterviewGenerator({
         {interviewQuestions && (
           <div style={{ marginTop: '24px' }}>
             <h3 style={{
-              fontSize: '18px',
+              fontSize: isMobile ? '16px' : '18px',
               fontWeight: '600',
               color: '#1f2937',
               marginBottom: '16px',
               display: 'flex',
               alignItems: 'center',
-              gap: '8px'
+              gap: '8px',
+              justifyContent: isMobile ? 'center' : 'flex-start'
             }}>
-              <Sparkles size={16} color="#4f46e5" />
+              <Sparkles size={isMobile ? 14 : 16} color="#4f46e5" />
               Interview Questions
             </h3>
             
             <div style={{
               backgroundColor: '#f9fafb',
               borderRadius: '12px',
-              padding: '24px',
+              padding: isMobile ? '16px' : '24px',
               boxShadow: '0 4px 6px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1)',
               border: '1px solid #e5e7eb'
             }}>
@@ -321,7 +350,7 @@ export default function MockInterviewGenerator({
                   color: '#374151',
                   lineHeight: '1.6',
                   fontFamily: 'system-ui, -apple-system, sans-serif',
-                  fontSize: '15px',
+                  fontSize: isMobile ? '14px' : '15px',
                   margin: 0,
                   overflowX: 'auto',
                   maxWidth: '100%',

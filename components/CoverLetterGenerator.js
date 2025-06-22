@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FileText, Send, Copy, CheckCircle, Download } from "lucide-react";
 
 export default function CoverLetterGenerator({ 
@@ -10,6 +10,21 @@ export default function CoverLetterGenerator({
 }) {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
 
   const generateCoverLetter = async () => {
     if (!resumeText || !jobDescription) {
@@ -186,9 +201,11 @@ export default function CoverLetterGenerator({
         backgroundColor: 'white',
         borderRadius: '16px',
         boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-        padding: '24px',
+        padding: isMobile ? '16px' : '24px',
         marginBottom: '24px',
-        border: '1px solid rgba(226, 232, 240, 0.8)'
+        border: '1px solid rgba(226, 232, 240, 0.8)',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
         <div style={{
           display: 'flex',
@@ -196,7 +213,9 @@ export default function CoverLetterGenerator({
           gap: '12px',
           marginBottom: '16px',
           borderBottom: '1px solid #f1f5f9',
-          paddingBottom: '16px'
+          paddingBottom: '16px',
+          flexDirection: isMobile ? 'column' : 'row',
+          textAlign: isMobile ? 'center' : 'left'
         }}>
           <div style={{
             backgroundColor: '#f3e8ff',
@@ -204,13 +223,14 @@ export default function CoverLetterGenerator({
             padding: '10px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            marginBottom: isMobile ? '8px' : '0'
           }}>
             <FileText size={24} color="#8b5cf6" />
           </div>
           <div>
             <h2 style={{
-              fontSize: '18px',
+              fontSize: isMobile ? '16px' : '18px',
               fontWeight: '600',
               color: '#1e293b',
               margin: 0
@@ -218,7 +238,7 @@ export default function CoverLetterGenerator({
               Job Description
             </h2>
             <p style={{
-              fontSize: '14px',
+              fontSize: isMobile ? '13px' : '14px',
               color: '#64748b',
               margin: 0
             }}>
@@ -228,11 +248,25 @@ export default function CoverLetterGenerator({
         </div>
         
         <div style={{ marginBottom: '20px' }}>
-          <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
-            <label style={{ fontSize: '14px', fontWeight: '500', color: '#475569' }}>
+          <div style={{ 
+            marginBottom: '8px', 
+            display: 'flex', 
+            justifyContent: 'space-between',
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: isMobile ? '4px' : '0'
+          }}>
+            <label style={{ 
+              fontSize: isMobile ? '13px' : '14px', 
+              fontWeight: '500', 
+              color: '#475569' 
+            }}>
               Job Details
             </label>
-            <span style={{ fontSize: '12px', color: '#94a3b8' }}>
+            <span style={{ 
+              fontSize: '12px', 
+              color: '#94a3b8',
+              textAlign: isMobile ? 'left' : 'right'
+            }}>
               {jobDescription.length} characters
             </span>
           </div>
@@ -242,20 +276,22 @@ export default function CoverLetterGenerator({
             placeholder="Paste the job description here..."
             style={{
               width: '100%',
-              minHeight: '200px',
-              maxHeight: '400px',
-              padding: '16px',
+              minHeight: isMobile ? '180px' : '200px',
+              maxHeight: isMobile ? '300px' : '400px',
+              padding: isMobile ? '12px' : '16px',
               borderRadius: '8px',
               border: '1px solid #e2e8f0',
               backgroundColor: '#f8fafc',
-              fontSize: '14px',
+              fontSize: isMobile ? '14px' : '15px',
               lineHeight: '1.6',
               fontFamily: 'system-ui, -apple-system, sans-serif',
               resize: 'vertical',
               transition: 'border-color 0.2s, box-shadow 0.2s',
               outline: 'none',
               boxSizing: 'border-box',
-              overflowY: 'auto'
+              overflowY: 'auto',
+              WebkitAppearance: 'none',
+              appearance: 'none'
             }}
             onFocus={(e) => {
               e.target.style.borderColor = '#d8b4fe';
@@ -281,12 +317,13 @@ export default function CoverLetterGenerator({
             backgroundImage: loading || !resumeText || !jobDescription ? 'none' : 'linear-gradient(to right, #8b5cf6, #6d28d9)',
             color: 'white',
             fontWeight: '600',
-            padding: '12px 24px',
+            padding: isMobile ? '10px 16px' : '12px 24px',
             borderRadius: '8px',
             border: 'none',
             cursor: loading || !resumeText || !jobDescription ? 'not-allowed' : 'pointer',
             transition: 'transform 0.2s, box-shadow 0.2s',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            fontSize: isMobile ? '14px' : '16px'
           }}
           onMouseOver={(e) => {
             if (!loading && resumeText && jobDescription) {
@@ -313,7 +350,7 @@ export default function CoverLetterGenerator({
             </>
           ) : (
             <>
-              <Send size={18} />
+              <Send size={isMobile ? 16 : 18} />
               <span>Generate Cover Letter</span>
             </>
           )}
@@ -325,9 +362,11 @@ export default function CoverLetterGenerator({
           backgroundColor: 'white',
           borderRadius: '16px',
           boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-          padding: '24px',
+          padding: isMobile ? '16px' : '24px',
           border: '1px solid rgba(226, 232, 240, 0.8)',
-          animation: 'fadeIn 0.5s ease'
+          animation: 'fadeIn 0.5s ease',
+          width: '100%',
+          boxSizing: 'border-box'
         }}>
           {/* Header section with responsive design for mobile */}
           <div style={{
@@ -335,14 +374,16 @@ export default function CoverLetterGenerator({
             flexDirection: 'column',
             marginBottom: '16px',
             borderBottom: '1px solid #f1f5f9',
-            paddingBottom: '16px'
+            paddingBottom: '16px',
+            textAlign: isMobile ? 'center' : 'left'
           }}>
             {/* Title section */}
             <div style={{ 
               display: 'flex', 
               alignItems: 'center', 
               gap: '12px',
-              marginBottom: '16px'
+              marginBottom: '16px',
+              flexDirection: isMobile ? 'column' : 'row'
             }}>
               <div style={{
                 backgroundColor: '#ecfdf5',
@@ -350,13 +391,14 @@ export default function CoverLetterGenerator({
                 padding: '10px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                marginBottom: isMobile ? '8px' : '0'
               }}>
                 <FileText size={24} color="#10b981" />
               </div>
               <div>
                 <h2 style={{
-                  fontSize: '18px',
+                  fontSize: isMobile ? '16px' : '18px',
                   fontWeight: '600',
                   color: '#1e293b',
                   margin: 0
@@ -364,7 +406,7 @@ export default function CoverLetterGenerator({
                   Your Cover Letter
                 </h2>
                 <p style={{
-                  fontSize: '14px',
+                  fontSize: isMobile ? '13px' : '14px',
                   color: '#64748b',
                   margin: 0
                 }}>
@@ -378,7 +420,7 @@ export default function CoverLetterGenerator({
               display: 'flex', 
               flexWrap: 'wrap',
               gap: '8px',
-              justifyContent: 'flex-start'
+              justifyContent: isMobile ? 'center' : 'flex-start'
             }}>
               {/* Regenerate button */}
               <button
@@ -394,15 +436,15 @@ export default function CoverLetterGenerator({
                   backgroundColor: loading ? '#94a3b8' : '#8b5cf6',
                   border: 'none',
                   borderRadius: '6px',
-                  fontSize: '14px',
+                  fontSize: isMobile ? '13px' : '14px',
                   fontWeight: '500',
                   color: 'white',
                   cursor: loading ? 'not-allowed' : 'pointer',
                   transition: 'all 0.2s',
                   boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-                  minWidth: '110px',
+                  minWidth: isMobile ? '100px' : '110px',
                   flexGrow: 1,
-                  maxWidth: '150px'
+                  maxWidth: isMobile ? '100%' : '150px'
                 }}
                 onMouseOver={(e) => {
                   if (!loading) {
@@ -456,14 +498,14 @@ export default function CoverLetterGenerator({
                   backgroundColor: '#f1f5f9',
                   border: 'none',
                   borderRadius: '6px',
-                  fontSize: '14px',
+                  fontSize: isMobile ? '13px' : '14px',
                   fontWeight: '500',
                   color: '#475569',
                   cursor: 'pointer',
                   transition: 'background-color 0.2s',
-                  minWidth: '90px',
+                  minWidth: isMobile ? '80px' : '90px',
                   flexGrow: 1,
-                  maxWidth: '120px'
+                  maxWidth: isMobile ? '100%' : '120px'
                 }}
                 onMouseOver={(e) => {
                   e.target.style.backgroundColor = '#e2e8f0';
@@ -497,15 +539,15 @@ export default function CoverLetterGenerator({
                   backgroundColor: '#0ea5e9',
                   border: 'none',
                   borderRadius: '6px',
-                  fontSize: '14px',
+                  fontSize: isMobile ? '13px' : '14px',
                   fontWeight: '500',
                   color: 'white',
                   cursor: 'pointer',
                   transition: 'all 0.2s',
                   boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-                  minWidth: '130px',
+                  minWidth: isMobile ? '100px' : '130px',
                   flexGrow: 1,
-                  maxWidth: '160px'
+                  maxWidth: isMobile ? '100%' : '160px'
                 }}
                 onMouseOver={(e) => {
                   e.target.style.backgroundColor = '#0284c7';
@@ -526,7 +568,7 @@ export default function CoverLetterGenerator({
           
           <div style={{
             backgroundColor: '#f8fafc',
-            padding: '20px',
+            padding: isMobile ? '16px' : '20px',
             borderRadius: '8px',
             borderLeft: '4px solid #10b981',
             overflowX: 'auto',
@@ -536,7 +578,7 @@ export default function CoverLetterGenerator({
           }}>
             <div style={{
               fontFamily: 'system-ui, -apple-system, sans-serif',
-              fontSize: '14px',
+              fontSize: isMobile ? '14px' : '15px',
               lineHeight: '1.6',
               color: '#334155',
               margin: 0,

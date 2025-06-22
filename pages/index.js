@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
-import { Upload, FileText, Sparkles, BarChart3, FileEdit, ClipboardCheck, Linkedin, Github, Globe, MessageSquare, BarChart, Loader2 } from "lucide-react";
+import { Upload, FileText, Sparkles, BarChart3, FileEdit, ClipboardCheck, Linkedin, Github, Globe, MessageSquare, BarChart, Loader2, HelpCircle, X, Info } from "lucide-react";
 import ResumePanel from "../components/ResumePanel";
 import CoverLetterGenerator from "../components/CoverLetterGenerator";
 import MockInterviewGenerator from "../components/MockInterviewGenerator";
@@ -12,6 +12,7 @@ export default function Home() {
   const [uploadLoading, setUploadLoading] = useState(false); // New state for upload loading
   const [isDragOver, setIsDragOver] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
   
   // State for CoverLetterGenerator
   const [coverLetterJobDescription, setCoverLetterJobDescription] = useState("");
@@ -127,6 +128,10 @@ export default function Home() {
         <title>CareerLaunch AI</title>
         <link rel="icon" href="/favicon.ico" />
         <meta name="description" content="Smart Resume Review & Cover Letter Generator" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="theme-color" content="#2563eb" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </Head>
       <style>{`
         @keyframes spin {
@@ -139,8 +144,17 @@ export default function Home() {
           100% { opacity: 1; transform: translateY(0); }
         }
         
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+        }
+        
         .fade-in {
           animation: fadeIn 0.5s ease-out;
+        }
+        
+        .pulse-animation {
+          animation: pulse 2s ease-in-out 1s;
         }
         
         .upload-button:hover {
@@ -205,8 +219,9 @@ export default function Home() {
       <div style={{
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #e8eaf6 100%)',
-        padding: '16px',
-        position: 'relative'
+        padding: isMobile ? '12px 8px' : '16px',
+        position: 'relative',
+        overflowX: 'hidden'
       }}>
         
         <div style={{
@@ -214,14 +229,51 @@ export default function Home() {
           margin: '0 auto',
           width: '100%',
           boxSizing: 'border-box',
-          overflowX: 'hidden'
+          overflowX: 'hidden',
+          paddingLeft: isMobile ? '8px' : '16px',
+          paddingRight: isMobile ? '8px' : '16px'
         }}>
           {/* Header */}
           <div style={{
             textAlign: 'center',
             marginBottom: '48px',
-            paddingTop: '32px'
+            paddingTop: '32px',
+            position: 'relative'
           }}>
+            {/* Info Button */}
+            <button
+              onClick={() => setShowInfoModal(true)}
+              aria-label="About this website"
+              className="pulse-animation"
+              style={{
+                position: 'absolute',
+                top: isMobile ? '0' : '10px',
+                right: isMobile ? '0' : '10px',
+                backgroundColor: 'rgba(219, 234, 254, 0.8)',
+                border: 'none',
+                borderRadius: '50%',
+                width: isMobile ? '36px' : '42px',
+                height: isMobile ? '36px' : '42px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                transition: 'all 0.2s ease',
+                zIndex: 10
+              }}
+              onMouseOver={(e) => {
+                e.target.style.backgroundColor = 'rgba(191, 219, 254, 0.9)';
+                e.target.style.transform = 'translateY(-2px)';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.backgroundColor = 'rgba(219, 234, 254, 0.8)';
+                e.target.style.transform = 'translateY(0)';
+              }}
+            >
+              <HelpCircle size={isMobile ? 20 : 24} color="#2563eb" />
+            </button>
+            
             <h1 style={{
               fontSize: isMobile ? '36px' : '48px',
               fontWeight: 'bold',
@@ -552,7 +604,9 @@ export default function Home() {
             borderRadius: '8px',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
             position: 'relative',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            width: '100%',
+            boxSizing: 'border-box'
           }}>
             <div style={{
               position: 'absolute',
@@ -599,9 +653,9 @@ export default function Home() {
             <div style={{
               display: 'flex',
               justifyContent: 'center',
-              gap: isMobile ? '12px' : '16px',
+              gap: isMobile ? '8px' : '16px',
               flexWrap: 'wrap',
-              flexDirection: 'row',
+              flexDirection: isMobile ? 'column' : 'row',
               alignItems: 'center',
               width: '100%'
             }}>
@@ -616,7 +670,7 @@ export default function Home() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: isMobile ? '6px 12px' : '8px 16px',
+                  padding: isMobile ? '8px 16px' : '8px 16px',
                   borderRadius: '6px',
                   textDecoration: 'none',
                   color: 'white',
@@ -625,7 +679,7 @@ export default function Home() {
                   backgroundColor: '#0077b5',
                   transition: 'transform 0.2s, box-shadow 0.2s',
                   boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
-                  width: 'auto',
+                  width: isMobile ? '100%' : 'auto',
                   justifyContent: 'center'
                 }}
                 onClick={(e) => {
@@ -667,7 +721,7 @@ export default function Home() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: isMobile ? '6px 12px' : '8px 16px',
+                  padding: isMobile ? '8px 16px' : '8px 16px',
                   borderRadius: '6px',
                   textDecoration: 'none',
                   color: 'white',
@@ -676,7 +730,7 @@ export default function Home() {
                   backgroundColor: '#24292e',
                   transition: 'transform 0.2s, box-shadow 0.2s',
                   boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
-                  width: 'auto',
+                  width: isMobile ? '100%' : 'auto',
                   justifyContent: 'center'
                 }}
               >
@@ -695,7 +749,7 @@ export default function Home() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: isMobile ? '6px 12px' : '8px 16px',
+                  padding: isMobile ? '8px 16px' : '8px 16px',
                   borderRadius: '6px',
                   textDecoration: 'none',
                   color: 'white',
@@ -704,7 +758,7 @@ export default function Home() {
                   backgroundColor: '#4f46e5',
                   transition: 'transform 0.2s, box-shadow 0.2s',
                   boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
-                  width: 'auto',
+                  width: isMobile ? '100%' : 'auto',
                   justifyContent: 'center'
                 }}
               >
@@ -717,31 +771,38 @@ export default function Home() {
           <footer style={{
             textAlign: 'center',
             color: '#6b7280',
-            fontSize: '14px',
-            paddingTop: '32px',
-            paddingBottom: '32px'
+            fontSize: isMobile ? '12px' : '14px',
+            paddingTop: '24px',
+            paddingBottom: '24px'
           }}>
             <div style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '8px',
-              marginBottom: '8px'
+              marginBottom: '8px',
+              flexWrap: 'wrap'
             }}>
               <span>Powered by</span>
               <span style={{ fontWeight: '600', color: '#2563eb' }}>Groq llama3-8b-8192</span>
             </div>
-            <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'center', gap: '16px' }}>
+            <div style={{ 
+              marginBottom: '8px', 
+              display: 'flex', 
+              justifyContent: 'center', 
+              gap: isMobile ? '8px' : '16px',
+              flexDirection: isMobile ? 'column' : 'row',
+              alignItems: 'center'
+            }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <BarChart3 size={14} color="#4b5563" /> Resume Analysis
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <FileEdit size={14} color="#4b5563" /> Cover Letter Generation
               </span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <MessageSquare size={14} color="#4b5563" /> Mock Interview Questions
               </span>
-            
             </div>
             <p style={{ margin: 0 }}>
               &copy; {new Date().getFullYear()} CareerLaunch AI. All rights reserved.
@@ -749,6 +810,168 @@ export default function Home() {
           </footer>
         </div>
       </div>
+
+      {/* Info Modal */}
+      {showInfoModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000,
+          padding: '16px',
+          backdropFilter: 'blur(4px)'
+        }} onClick={() => setShowInfoModal(false)}>
+          {/* Modal Content - Clicking inside won't close the modal */}
+          <div 
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '16px',
+              padding: isMobile ? '20px' : '32px',
+              maxWidth: '600px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              position: 'relative',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+              animation: 'fadeIn 0.3s ease'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowInfoModal(false)}
+              aria-label="Close modal"
+              style={{
+                position: 'absolute',
+                top: '16px',
+                right: '16px',
+                backgroundColor: 'rgba(239, 246, 255, 0.8)',
+                border: 'none',
+                borderRadius: '50%',
+                width: '36px',
+                height: '36px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseOver={(e) => {
+                e.target.style.backgroundColor = 'rgba(219, 234, 254, 0.9)';
+              }}
+            >
+              <X size={20} color="#2563eb" />
+            </button>
+
+            {/* Modal Header */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              marginBottom: '24px'
+            }}>
+              <div style={{
+                backgroundColor: '#dbeafe',
+                borderRadius: '12px',
+                padding: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <Info size={24} color="#2563eb" />
+              </div>
+              <h2 style={{
+                fontSize: isMobile ? '20px' : '24px',
+                fontWeight: '700',
+                color: '#1e293b',
+                margin: 0
+              }}>
+                About CareerLaunch AI
+              </h2>
+            </div>
+
+            {/* Modal Content */}
+            <div style={{
+              color: '#475569',
+              fontSize: isMobile ? '15px' : '16px',
+              lineHeight: '1.7'
+            }}>
+              <h3 style={{ color: '#2563eb', fontSize: isMobile ? '16px' : '18px', marginTop: '24px', marginBottom: '12px' }}>
+                What is CareerLaunch AI?
+              </h3>
+              <p>
+                CareerLaunch AI is an all-in-one career toolkit powered by artificial intelligence that helps job seekers improve their application materials and prepare for interviews.
+              </p>
+              
+              <h3 style={{ color: '#2563eb', fontSize: isMobile ? '16px' : '18px', marginTop: '24px', marginBottom: '12px' }}>
+                How It Works
+              </h3>
+              <p style={{ marginBottom: '8px' }}>
+                Our platform offers three main tools to boost your job search:
+              </p>
+              
+              <div style={{ marginLeft: '16px', marginBottom: '16px' }}>
+                <p style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '12px' }}>
+                  <span style={{ color: '#2563eb', fontWeight: '700', fontSize: '18px' }}>1.</span>
+                  <span>
+                    <strong style={{ color: '#1e293b' }}>Resume Critique:</strong> Upload your resume to receive detailed feedback on its strengths and weaknesses, with specific recommendations for improvement.
+                  </span>
+                </p>
+                
+                <p style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '12px' }}>
+                  <span style={{ color: '#2563eb', fontWeight: '700', fontSize: '18px' }}>2.</span>
+                  <span>
+                    <strong style={{ color: '#1e293b' }}>Cover Letter Generator:</strong> Create personalized cover letters tailored to specific job descriptions, highlighting your relevant skills and experience.
+                  </span>
+                </p>
+                
+                <p style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                  <span style={{ color: '#2563eb', fontWeight: '700', fontSize: '18px' }}>3.</span>
+                  <span>
+                    <strong style={{ color: '#1e293b' }}>Mock Interview Generator:</strong> Practice with customized interview questions based on your resume and target job, helping you prepare for the real thing.
+                  </span>
+                </p>
+              </div>
+              
+              <h3 style={{ color: '#2563eb', fontSize: isMobile ? '16px' : '18px', marginTop: '24px', marginBottom: '12px' }}>
+                Getting Started
+              </h3>
+              <ol style={{ paddingLeft: '20px' }}>
+                <li style={{ marginBottom: '8px' }}>Upload your resume PDF using the upload area</li>
+                <li style={{ marginBottom: '8px' }}>Review and edit the extracted text if needed</li>
+                <li style={{ marginBottom: '8px' }}>Choose which tool you want to use from the tabs</li>
+                <li style={{ marginBottom: '8px' }}>Follow the instructions for each specific tool</li>
+                <li>Download, copy, or use the generated content for your job applications</li>
+              </ol>
+              
+              <h3 style={{ color: '#2563eb', fontSize: isMobile ? '16px' : '18px', marginTop: '24px', marginBottom: '12px' }}>
+                Privacy & Security
+              </h3>
+              <p>
+                Your data is processed securely and not stored permanently. We use state-of-the-art AI models to analyze your resume and generate content, but we don't retain your personal information after your session.
+              </p>
+              
+              <div style={{ 
+                marginTop: '32px',
+                padding: '16px',
+                backgroundColor: '#f0f9ff',
+                borderRadius: '8px',
+                borderLeft: '4px solid #2563eb'
+              }}>
+                <p style={{ margin: 0, fontWeight: '500', color: '#2563eb' }}>
+                  Ready to boost your job search? Upload your resume and let CareerLaunch AI help you land your dream job!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
