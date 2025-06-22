@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FileText, Send, Copy, CheckCircle, Download } from "lucide-react";
 
-export default function CoverLetterGenerator({ resumeText }) {
-  const [jobDescription, setJobDescription] = useState("");
-  const [coverLetter, setCoverLetter] = useState("");
+export default function CoverLetterGenerator({ 
+  resumeText, 
+  jobDescription, 
+  setJobDescription, 
+  coverLetter, 
+  setCoverLetter 
+}) {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  // No need for html2pdf state anymore
 
   const generateCoverLetter = async () => {
     if (!resumeText || !jobDescription) {

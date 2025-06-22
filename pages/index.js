@@ -12,6 +12,14 @@ export default function Home() {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   
+  // State for CoverLetterGenerator
+  const [coverLetterJobDescription, setCoverLetterJobDescription] = useState("");
+  const [coverLetter, setCoverLetter] = useState("");
+  
+  // State for MockInterviewGenerator
+  const [mockInterviewJobDescription, setMockInterviewJobDescription] = useState("");
+  const [interviewQuestions, setInterviewQuestions] = useState("");
+  
   // Check if device is mobile
   useEffect(() => {
     const checkIfMobile = () => {
@@ -422,14 +430,26 @@ export default function Home() {
           {/* Cover Letter Generator */}
           {resumeText && activeTab === "cover-letter" && (
             <div className="fade-in">
-              <CoverLetterGenerator resumeText={resumeText} />
+              <CoverLetterGenerator 
+                resumeText={resumeText}
+                jobDescription={coverLetterJobDescription}
+                setJobDescription={setCoverLetterJobDescription}
+                coverLetter={coverLetter}
+                setCoverLetter={setCoverLetter}
+              />
             </div>
           )}
 
           {/* Mock Interview Generator */}
           {resumeText && activeTab === "mock-interview" && (
             <div className="fade-in">
-              <MockInterviewGenerator resumeText={resumeText} />
+              <MockInterviewGenerator 
+                resumeText={resumeText}
+                jobDescription={mockInterviewJobDescription}
+                setJobDescription={setMockInterviewJobDescription}
+                interviewQuestions={interviewQuestions}
+                setInterviewQuestions={setInterviewQuestions}
+              />
             </div>
           )}
 
