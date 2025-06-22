@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
-import { Upload, FileText, Sparkles, BarChart3, FileEdit, ClipboardCheck, Linkedin, Github, Globe, MessageSquare, BarChart } from "lucide-react";
+import { Upload, FileText, Sparkles, BarChart3, FileEdit, ClipboardCheck, Linkedin, Github, Globe, MessageSquare, BarChart, Loader2 } from "lucide-react";
 import ResumePanel from "../components/ResumePanel";
 import CoverLetterGenerator from "../components/CoverLetterGenerator";
 import MockInterviewGenerator from "../components/MockInterviewGenerator";
@@ -9,6 +9,7 @@ export default function Home() {
   const [resumeText, setResumeText] = useState("");
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false); // New state for upload loading
   const [isDragOver, setIsDragOver] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   
@@ -40,6 +41,9 @@ export default function Home() {
       alert("Please upload a PDF file.");
       return;
     }
+    
+    setUploadLoading(true); // Start upload loading
+    
     const reader = new FileReader();
     reader.onloadend = async () => {
       const base64 = reader.result.split(",")[1];
@@ -71,6 +75,8 @@ export default function Home() {
         }, 300);
       } catch (err) {
         alert(err.message);
+      } finally {
+        setUploadLoading(false); // End upload loading
       }
     };
     reader.readAsDataURL(file);
@@ -169,6 +175,15 @@ export default function Home() {
           background-color: rgba(37, 99, 235, 0.1);
         }
 
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+
+        .loading-overlay {
+          animation: pulse 1.5s ease-in-out infinite;
+        }
+
         @media (max-width: 768px) {
           .tab-container {
             overflow-x: auto;
@@ -255,12 +270,79 @@ export default function Home() {
                 borderRadius: '16px',
                 padding: '32px',
                 backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                backdropFilter: 'blur(10px)'
+                backdropFilter: 'blur(10px)',
+                opacity: uploadLoading ? 0.7 : 1,
+                pointerEvents: uploadLoading ? 'none' : 'auto'
               }}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
             >
+              {/* Loading Overlay */}
+              {uploadLoading && (
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  borderRadius: '16px',
+                  zIndex: 10
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    marginBottom: '16px'
+                  }}>
+                    <Loader2 
+                      size={32} 
+                      color="#2563eb" 
+                      style={{ 
+                        animation: 'spin 1s linear infinite'
+                      }} 
+                    />
+                    <div>
+                      <h3 style={{
+                        fontSize: '18px',
+                        fontWeight: '600',
+                        color: '#2563eb',
+                        margin: '0 0 4px 0'
+                      }}>
+                        Processing Your Resume
+                      </h3>
+                      <p style={{
+                        color: '#6b7280',
+                        margin: '0',
+                        fontSize: '14px'
+                      }}>
+                        Please wait while we extract the text from your PDF...
+                      </p>
+                    </div>
+                  </div>
+                  <div className="loading-overlay" style={{
+                    width: '200px',
+                    height: '4px',
+                    backgroundColor: '#e5e7eb',
+                    borderRadius: '2px',
+                    overflow: 'hidden'
+                  }}>
+                    <div style={{
+                      width: '100%',
+                      height: '100%',
+                      background: 'linear-gradient(to right, #2563eb, #7c3aed)',
+                      borderRadius: '2px',
+                      animation: 'pulse 1.5s ease-in-out infinite'
+                    }}></div>
+                  </div>
+                </div>
+              )}
+
               <div style={{ textAlign: 'center' }}>
                 <div style={{
                   display: 'flex',
@@ -296,7 +378,7 @@ export default function Home() {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '12px',
-                    cursor: 'pointer',
+                    cursor: uploadLoading ? 'not-allowed' : 'pointer',
                     background: 'linear-gradient(to right, #2563eb, #7c3aed)',
                     color: 'white',
                     padding: '16px 32px',
@@ -305,7 +387,8 @@ export default function Home() {
                     fontWeight: '600',
                     fontSize: '16px',
                     border: 'none',
-                    transition: 'all 0.2s ease'
+                    transition: 'all 0.2s ease',
+                    opacity: uploadLoading ? 0.6 : 1
                   }}
                 >
                   <Upload size={20} />
@@ -315,6 +398,7 @@ export default function Home() {
                     accept="application/pdf"
                     onChange={handleFileChange}
                     style={{ display: 'none' }}
+                    disabled={uploadLoading}
                   />
                 </label>
               </div>
