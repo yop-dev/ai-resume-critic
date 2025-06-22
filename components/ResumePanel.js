@@ -231,86 +231,87 @@ export default function ResumePanel({
 
       {/* Feedback Section */}
       {feedback && (
-        <div style={{ marginTop: '32px' }} ref={feedbackRef}>
+        <div style={{ 
+          marginTop: '32px',
+          backgroundColor: 'white',
+          borderRadius: '16px',
+          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          padding: isMobile ? '16px' : '24px',
+          border: '1px solid rgba(226, 232, 240, 0.8)'
+        }} ref={feedbackRef}>
           <div style={{
-            backgroundColor: 'white',
-            borderRadius: '16px',
-            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-            padding: isMobile ? '16px' : '24px',
-            border: '1px solid rgba(226, 232, 240, 0.8)'
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            marginBottom: '20px',
+            flexDirection: isMobile ? 'column' : 'row',
+            textAlign: isMobile ? 'center' : 'left'
           }}>
             <div style={{
+              backgroundColor: '#ecfdf5',
+              borderRadius: '12px',
+              padding: '10px',
               display: 'flex',
               alignItems: 'center',
-              gap: '12px',
-              marginBottom: '16px',
-              borderBottom: '1px solid #f1f5f9',
-              paddingBottom: '16px',
-              flexDirection: isMobile ? 'column' : 'row',
-              textAlign: isMobile ? 'center' : 'left'
+              justifyContent: 'center',
+              marginBottom: isMobile ? '8px' : '0'
             }}>
-              <div style={{
-                backgroundColor: '#ecfdf5',
-                borderRadius: '12px',
-                padding: '10px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: isMobile ? '8px' : '0'
-              }}>
-                <Sparkles size={24} color="#059669" />
-              </div>
-              <div>
-                <h2 style={{
-                  fontSize: isMobile ? '16px' : '18px',
-                  fontWeight: '600',
-                  color: '#1e293b',
-                  margin: 0
-                }}>
-                  AI Feedback & Analysis
-                </h2>
-                <p style={{
-                  fontSize: isMobile ? '13px' : '14px',
-                  color: '#64748b',
-                  margin: 0
-                }}>
-                  Expert recommendations to improve your resume
-                </p>
-              </div>
+              <Sparkles size={24} color="#059669" />
             </div>
-            
-            <div 
-              dangerouslySetInnerHTML={{ __html: feedback }}
-              style={{
-                backgroundColor: '#f9fafb',
-                borderRadius: '12px',
-                padding: isMobile ? '16px' : '24px',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1)',
-                border: '1px solid #e5e7eb',
-                overflowX: 'auto',
-                maxWidth: '100%',
-                boxSizing: 'border-box',
-                fontSize: isMobile ? '14px' : '15px',
-                marginBottom: '20px'
-              }}
-              className="feedback-container"
-            />
+            <div>
+              <h2 style={{
+                fontSize: isMobile ? '16px' : '18px',
+                fontWeight: '600',
+                color: '#1e293b',
+                margin: 0
+              }}>
+                AI Feedback & Analysis
+              </h2>
+              <p style={{
+                fontSize: isMobile ? '13px' : '14px',
+                color: '#64748b',
+                margin: 0
+              }}>
+                Expert recommendations to improve your resume
+              </p>
+            </div>
+          </div>
+          
+          <div 
+            dangerouslySetInnerHTML={{ __html: feedback }}
+            style={{
+              overflowX: 'auto',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
+              fontSize: isMobile ? '14px' : '15px',
+              marginBottom: '20px',
+              lineHeight: '1.6'
+            }}
+            className="feedback-container"
+          />
             
             {/* Re-analyze button */}
-            <p style={{
-              fontSize: isMobile ? '13px' : '14px',
-              color: '#6b7280',
-              textAlign: 'center',
-              margin: '8px 0 12px 0'
-            }}>
-              Made changes to your resume? Click below to get updated feedback.
-            </p>
-            
             <div style={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: '8px'
+              marginTop: '24px',
+              padding: '16px',
+              backgroundColor: 'rgba(236, 253, 245, 0.4)',
+              borderRadius: '8px',
+              textAlign: 'center'
             }}>
+              <p style={{
+                fontSize: isMobile ? '13px' : '14px',
+                color: '#047857',
+                textAlign: 'center',
+                margin: '0 0 12px 0',
+                fontWeight: '500'
+              }}>
+                Made changes to your resume? Click below to get updated feedback.
+              </p>
+              
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center'
+              }}>
               <button
                 onClick={handleReAnalyze}
                 disabled={loading || resumeText.length < 100}
@@ -369,8 +370,8 @@ export default function ResumePanel({
                   </>
                 )}
               </button>
+              </div>
             </div>
-          </div>
         </div>
       )}
     </div>
