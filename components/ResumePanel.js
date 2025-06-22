@@ -219,25 +219,20 @@ export default function ResumePanel({
               </div>
             </div>
             
-            <div>
-              <pre style={{
-                whiteSpace: 'pre-wrap',
-                color: '#374151',
-                lineHeight: '1.6',
+            <div 
+              dangerouslySetInnerHTML={{ __html: feedback }}
+              style={{
                 backgroundColor: '#f9fafb',
-                padding: '16px',
-                borderRadius: '8px',
-                borderLeft: '4px solid #2563eb',
-                fontFamily: 'system-ui, -apple-system, sans-serif',
-                fontSize: '14px',
-                margin: 0,
+                borderRadius: '12px',
+                padding: '24px',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1)',
+                border: '1px solid #e5e7eb',
                 overflowX: 'auto',
                 maxWidth: '100%',
                 boxSizing: 'border-box'
-              }}>
-                {feedback}
-              </pre>
-            </div>
+              }}
+              className="feedback-container"
+            />
           </div>
         </div>
       )}

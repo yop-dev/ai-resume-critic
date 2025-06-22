@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { formatResumeFeedback } from "./formatResumeFeedback";
 
 // Initialize the OpenAI client with Groq's base URL
 const client = new OpenAI({
@@ -108,19 +109,17 @@ Please provide a thorough, professional analysis that will genuinely help this c
     // Extract the generated text
     let responseText = response.choices[0]?.message?.content || '';
 
-    // Validate response
-    if (!responseText.trim()) {
-      throw new Error('Empty response from Groq API');
-    }
+// Validate response
+if (!responseText.trim()) {
+  throw new Error('Empty response from Groq API');
+}
 
-    // Keep the markdown formatting for section headers and enhance subsection headers
-    const formattedResponse = responseText
-      .replace(/\*([^*]+)\*/g, '• $1') // Convert single asterisks to bullet points
-      .replace(/^(\*[^:]+:)/gm, '### $1') // Mark subsection headers with ###
-      .trim();
+// Format the response using the same approach as mock interview questions
+const formattedResponse = formatResumeFeedback(responseText);
 
-    // Log successful analysis (optional, remove in production)
-    console.log(`Successfully analyzed resume of ${resumeText.length} characters`);
+// Log successful analysis (optional, remove in production)
+console.log(`Successfully analyzed resume of ${resumeText.length} characters`);
+
 
     res.status(200).json({ 
       feedback: formattedResponse,

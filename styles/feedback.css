@@ -1,0 +1,157 @@
+/* Resume Feedback Styling */
+.feedback-container {
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #374151;
+  line-height: 1.6;
+  background-color: #f9fafb;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.feedback-section {
+  margin-bottom: 32px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.feedback-section .section-title {
+  margin: 0;
+  padding: 16px;
+  background-color: #edf2f7;
+  font-weight: 700;
+  font-size: 18px;
+  color: #2d3748;
+  border-left: 4px solid #cbd5e0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Section-specific colors using data attributes */
+.feedback-section[data-section-type="overall"] .section-title {
+  background-color: #ebf8ff;
+  color: #2b6cb0;
+  border-left-color: #90cdf4;
+}
+
+.feedback-section[data-section-type="strengths"] .section-title {
+  background-color: #e6fffa;
+  color: #2c7a7b;
+  border-left-color: #81e6d9;
+}
+
+.feedback-section[data-section-type="critical"] .section-title {
+  background-color: #feebc8;
+  color: #c05621;
+  border-left-color: #fbd38d;
+}
+
+.feedback-section[data-section-type="red-flags"] .section-title {
+  background-color: #feebc8;
+  color: #c05621;
+  border-left-color: #fbd38d;
+}
+
+.feedback-section[data-section-type="recommendations"] .section-title {
+  background-color: #e9d8fd;
+  color: #6b46c1;
+  border-left-color: #d6bcfa;
+}
+
+.feedback-section h3 {
+  margin: 16px 0 8px;
+  font-weight: 600;
+  color: #4a5568;
+  font-size: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 4px;
+}
+
+.feedback-section p {
+  margin: 12px 0;
+  white-space: pre-line; /* Preserve line breaks */
+  font-weight: normal;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* Hide empty paragraphs */
+.feedback-section p:empty {
+  display: none;
+}
+
+/* Format numbered lists */
+.section-content p {
+  position: relative;
+}
+
+.section-content {
+  padding: 16px;
+  background-color: white;
+}
+
+/* List styling */
+.feedback-section ul {
+  margin: 12px 0;
+  padding-left: 20px;
+}
+
+.feedback-section ul li {
+  margin: 8px 0;
+  position: relative;
+}
+
+.feedback-section .bullet-list li::before {
+  content: "\2022"; /* Unicode bullet point */
+  color: #4f46e5;
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+.feedback-section .dash-list li::before {
+  content: "-";
+  color: #4f46e5;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+/* Numbered list styling */
+.numbered-item {
+  display: flex;
+  margin: 12px 0;
+  align-items: flex-start;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.numbered-item:last-child {
+  border-bottom: none;
+}
+
+.numbered-item .number {
+  color: #4f46e5;
+  font-weight: bold;
+  margin-right: 12px;
+  min-width: 24px;
+  text-align: right;
+}
+
+.numbered-item .content {
+  flex: 1;
+  font-weight: normal;
+  color: #4b5563;
+}
+
+/* Container for grouped numbered items */
+.numbered-list {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 16px 0;
+  border: 1px solid #e5e7eb;
+}
