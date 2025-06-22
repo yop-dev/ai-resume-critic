@@ -716,7 +716,7 @@ export default function Home() {
                   }
                 }}
               >
-                <Linkedin size={isMobile ? 16 : 18} style={{ flexShrink: 0 }} />
+                <Linkedin size={isMobile ? 14 : 18} style={{ flexShrink: 0 }} />
                 <span>LinkedIn</span>
               </a>
               
@@ -744,7 +744,7 @@ export default function Home() {
                   justifyContent: 'center'
                 }}
               >
-                <Github size={isMobile ? 16 : 18} style={{ flexShrink: 0 }} />
+                <Github size={isMobile ? 14 : 18} style={{ flexShrink: 0 }} />
                 <span>GitHub</span>
               </a>
               
@@ -772,7 +772,7 @@ export default function Home() {
                   justifyContent: 'center'
                 }}
               >
-                <Globe size={isMobile ? 16 : 18} style={{ flexShrink: 0 }} />
+                <Globe size={isMobile ? 14 : 18} style={{ flexShrink: 0 }} />
                 <span>Portfolio</span>
               </a>
             </div>
@@ -781,37 +781,37 @@ export default function Home() {
           <footer style={{
             textAlign: 'center',
             color: '#6b7280',
-            fontSize: isMobile ? '12px' : '14px',
-            paddingTop: '24px',
-            paddingBottom: '24px'
+            fontSize: isMobile ? '11px' : '14px',
+            paddingTop: isMobile ? '16px' : '24px',
+            paddingBottom: isMobile ? '16px' : '24px'
           }}>
             <div style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '8px',
-              marginBottom: '8px',
+              marginBottom: isMobile ? '4px' : '8px',
               flexWrap: 'wrap'
             }}>
               <span>Powered by</span>
               <span style={{ fontWeight: '600', color: '#2563eb' }}>Groq llama3-8b-8192</span>
             </div>
             <div style={{ 
-              marginBottom: '8px', 
+              marginBottom: isMobile ? '4px' : '8px', 
               display: 'flex', 
               justifyContent: 'center', 
-              gap: isMobile ? '8px' : '16px',
+              gap: isMobile ? '6px' : '16px',
               flexDirection: isMobile ? 'column' : 'row',
               alignItems: 'center'
             }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <BarChart3 size={14} color="#4b5563" /> Resume Analysis
+                <BarChart3 size={isMobile ? 12 : 14} color="#4b5563" /> Resume Analysis
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <FileEdit size={14} color="#4b5563" /> Cover Letter Generation
+                <FileEdit size={isMobile ? 12 : 14} color="#4b5563" /> Cover Letter Generation
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <MessageSquare size={14} color="#4b5563" /> Mock Interview Questions
+                <MessageSquare size={isMobile ? 12 : 14} color="#4b5563" /> Mock Interview Questions
               </span>
             </div>
             <p style={{ margin: 0 }}>
