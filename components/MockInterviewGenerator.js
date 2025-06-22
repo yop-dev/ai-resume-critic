@@ -114,9 +114,8 @@ const formatInterviewQuestions = (text) => {
         }
         
         processedContent += `<div style="display:flex;margin:20px 0;align-items:flex-start;background-color:#f8fafc;padding:12px;border-radius:8px;border-left:3px solid ${badgeColor};">
-          <div style="display:flex;flex-direction:column;align-items:center;margin-right:12px;min-width:40px;">
-            <div style="color:#4f46e5;font-weight:700;font-size:16px;">${number}.</div>
-            ${section.title ? `<div style="background-color:${badgeBg};color:${badgeColor};font-size:10px;padding:3px 6px;border-radius:10px;margin-top:4px;white-space:nowrap;font-weight:600;letter-spacing:0.5px;">${shortSectionName}</div>` : ''}
+          <div style="margin-right:12px;min-width:28px;text-align:center;">
+            <div style="color:${badgeColor};font-weight:700;font-size:16px;">${number}.</div>
           </div>
           <div style="flex:1;">${questionText}</div>
         </div>`;
