@@ -22,6 +22,9 @@ export function formatResumeFeedback(text) {
   // Process each section
   let processedHtml = '';
   
+  // Define the consistent text color to use throughout
+  const textColor = '#4b5563';
+  
   sections.forEach((section, index) => {
     if (section.title) {
       // Determine section color based on title
@@ -37,10 +40,10 @@ export function formatResumeFeedback(text) {
         sectionColor = '#6b46c1'; // Purple
       }
       
-      // Add section header
-      processedHtml += `<div style="margin:${index === 0 ? '0' : '32px'} 0 20px;padding-bottom:10px;border-bottom:2px solid ${sectionColor};background-color:#f5f3ff;padding:12px;border-radius:8px;">
-        <h3 style="color:${sectionColor};font-size:20px;margin:0;font-weight:700;display:flex;align-items:center;">
-          <span style="display:inline-block;width:6px;height:24px;background-color:${sectionColor};margin-right:10px;border-radius:3px;"></span>
+      // Add section header with mobile-friendly styling
+      processedHtml += `<div style="margin:${index === 0 ? '0' : '24px'} 0 16px;padding-bottom:8px;border-bottom:2px solid ${sectionColor};background-color:#f5f3ff;padding:10px;border-radius:8px;">
+        <h3 style="color:${sectionColor};font-size:clamp(16px, 5vw, 20px);margin:0;font-weight:700;display:flex;align-items:center;">
+          <span style="display:inline-block;width:4px;height:20px;background-color:${sectionColor};margin-right:8px;border-radius:2px;"></span>
           ${section.title}
         </h3>
       </div>`;
@@ -48,11 +51,22 @@ export function formatResumeFeedback(text) {
     
     // Process content if there is any
     if (section.content) {
-      // Handle bullet points
-      let content = section.content.replace(/• ([^•\n]+)/g, 
-        '<div style="display:flex;margin:12px 0;align-items:flex-start;padding:8px 0;">' +
-          '<div style="color:#4f46e5;margin-right:10px;font-size:18px;">•</div>' +
-          '<div style="flex:1;color:#4b5563;">$1</div>' +
+      // Ensure consistent text color for all sections
+      let sectionContent = section.content;
+      
+      // Special handling for sections that often have black text
+      if (section.title.includes('OVERALL ASSESSMENT') || 
+          section.title.includes('FORMATTING & PRESENTATION') || 
+          section.title.includes('CONTENT OPTIMIZATION') || 
+          section.title.includes('RED FLAGS')) {
+        // Wrap the entire content in a span with the correct color
+        sectionContent = `<div style="color:#4b5563;font-weight:normal;">${sectionContent}</div>`;
+      }
+      // Handle bullet points with mobile-friendly sizing and consistent text styling
+      let content = sectionContent.replace(/• ([^•\n]+)/g, 
+        '<div style="display:flex;margin:10px 0;align-items:flex-start;padding:6px 0;">' +
+          '<div style="color:#4f46e5;margin-right:8px;font-size:clamp(16px, 4vw, 18px);font-weight:600;">•</div>' +
+          '<div style="flex:1;color:#4b5563;font-size:clamp(13px, 4vw, 15px);font-weight:normal;">$1</div>' +
         '</div>'
       );
       
@@ -83,12 +97,12 @@ export function formatResumeFeedback(text) {
         const number = numberMatch[1];
         const itemText = numberMatch[2];
         
-        // Create a styled numbered item
-        processedContent += `<div style="display:flex;margin:20px 0;align-items:flex-start;background-color:#f8fafc;padding:12px;border-radius:8px;border-left:3px solid ${itemColor};">
-          <div style="margin-right:12px;min-width:28px;text-align:center;">
-            <div style="color:${itemColor};font-weight:700;font-size:16px;">${number}.</div>
+        // Create a styled numbered item with mobile-friendly sizing and consistent text styling
+        processedContent += `<div style="display:flex;margin:16px 0;align-items:flex-start;background-color:#f8fafc;padding:clamp(8px, 3vw, 12px);border-radius:8px;border-left:3px solid ${itemColor};">
+          <div style="margin-right:8px;min-width:24px;text-align:center;">
+            <div style="color:${itemColor};font-weight:600;font-size:clamp(14px, 4vw, 16px);">${number}.</div>
           </div>
-          <div style="flex:1;color:#4b5563;">${itemText}</div>
+          <div style="flex:1;color:#4b5563;font-size:clamp(13px, 4vw, 15px);font-weight:normal;">${itemText}</div>
         </div>`;
         
         lastNumberIndex = numberMatch.index + numberMatch[0].length;
@@ -104,17 +118,111 @@ export function formatResumeFeedback(text) {
         content = processedContent;
       }
       
-      // Format subsection headers
-      content = content.replace(/\*([^*:]+):\*/g, 
-        '<div style="margin:20px 0 12px;font-weight:600;color:#1f2937;font-size:18px;border-bottom:1px solid #e2e8f0;padding-bottom:8px;">$1:</div>'
-      );
+      // Special handling for sections that need better formatting
+      if (section.title.includes('SECTION-BY-SECTION ANALYSIS') || 
+          section.title.includes('FORMATTING & PRESENTATION') || 
+          section.title.includes('CONTENT OPTIMIZATION') ||
+          section.title.includes('SPECIFIC RECOMMENDATIONS')) {
+        
+        // First, handle subsection headers
+        content = content.replace(/\*([^*:]+):\*/g, (match, subsection) => {
+          return `<div style="margin:18px 0 10px;font-weight:600;color:#1f2937;font-size:clamp(15px, 4vw, 18px);border-bottom:1px solid #e2e8f0;padding-bottom:6px;">${subsection}:</div>`;
+        });
+        
+        // Then, split the content by subsection headers to process each subsection separately
+        const subsectionRegex = /<div style="margin:18px 0 10px[^>]+>([^<]+):<\/div>/g;
+        let lastIndex = 0;
+        let processedSubsections = '';
+        let match;
+        
+        while ((match = subsectionRegex.exec(content)) !== null) {
+          const fullMatch = match[0];
+          const subsectionTitle = match[1];
+          const startIndex = match.index;
+          
+          // Add content before this subsection header
+          if (startIndex > lastIndex) {
+            processedSubsections += content.substring(lastIndex, startIndex);
+          }
+          
+          // Add the subsection header
+          processedSubsections += fullMatch;
+          
+          // Find the next subsection header or the end of content
+          const nextMatch = subsectionRegex.exec(content);
+          subsectionRegex.lastIndex = match.index + match[0].length; // Reset regex to continue from after current match
+          
+          const endIndex = nextMatch ? nextMatch.index : content.length;
+          
+          // Extract and process the subsection content
+          let subsectionContent = content.substring(startIndex + fullMatch.length, endIndex);
+          
+          // Format the subsection content as bullet points
+          if (subsectionContent.trim()) {
+            // Check if this is the SPECIFIC RECOMMENDATIONS section which often has numbered points
+            const isNumberedSection = section.title.includes('SPECIFIC RECOMMENDATIONS');
+            
+            // Split by periods or line breaks to create bullet points
+            const points = subsectionContent
+              .replace(/\.\s+/g, '.\n')  // Add line breaks after periods
+              .split(/\n+/)              // Split by line breaks
+              .filter(point => point.trim().length > 0);  // Remove empty lines
+            
+            if (points.length > 0) {
+              processedSubsections += '<ul style="list-style-type:none;padding-left:0;margin-top:8px;">';
+              
+              points.forEach((point, idx) => {
+                if (point.trim()) {
+                  // Check if the point starts with a number (for SPECIFIC RECOMMENDATIONS)
+                  const numberMatch = point.match(/^(\d+)\.\s+(.*)/);
+                  
+                  if (isNumberedSection && numberMatch) {
+                    // This is a numbered point
+                    const number = numberMatch[1];
+                    const text = numberMatch[2];
+                    
+                    processedSubsections += `
+                      <li style="display:flex;margin:12px 0;align-items:flex-start;background-color:#f8fafc;padding:clamp(8px, 3vw, 12px);border-radius:8px;border-left:3px solid #6b46c1;">
+                        <span style="color:#6b46c1;font-weight:600;margin-right:8px;min-width:24px;text-align:center;font-size:clamp(14px, 4vw, 16px);">${number}.</span>
+                        <span style="flex:1;color:#4b5563;font-size:clamp(13px, 4vw, 15px);font-weight:normal;">${text.trim()}</span>
+                      </li>`;
+                  } else {
+                    // Regular bullet point
+                    processedSubsections += `
+                      <li style="display:flex;margin:8px 0;align-items:flex-start;">
+                        <span style="color:#4f46e5;margin-right:8px;font-weight:600;">•</span>
+                        <span style="flex:1;color:#4b5563;font-size:clamp(13px, 4vw, 15px);font-weight:normal;">${point.trim()}</span>
+                      </li>`;
+                  }
+                }
+              });
+              
+              processedSubsections += '</ul>';
+            }
+          }
+          
+          lastIndex = endIndex;
+        }
+        
+        // Add any remaining content
+        if (lastIndex < content.length) {
+          processedSubsections += content.substring(lastIndex);
+        }
+        
+        content = processedSubsections;
+      } else {
+        // For other sections, just format subsection headers normally
+        content = content.replace(/\*([^*:]+):\*/g, 
+          '<div style="margin:18px 0 10px;font-weight:600;color:#1f2937;font-size:clamp(15px, 4vw, 18px);border-bottom:1px solid #e2e8f0;padding-bottom:6px;">$1:</div>'
+        );
+      }
       
       // Add paragraph spacing
       content = content.replace(/\n\n/g, '<div style="height:16px"></div>');
       
-      // Handle regular paragraphs
+      // Handle regular paragraphs with mobile-friendly sizing and consistent text styling
       if (!content.includes('<div') && content.trim()) {
-        content = `<p style="margin:12px 0;color:#4b5563;line-height:1.6;">${content}</p>`;
+        content = `<p style="margin:10px 0;color:#4b5563;line-height:1.6;font-size:clamp(13px, 4vw, 15px);font-weight:normal;">${content}</p>`;
       }
       
       processedHtml += content;
