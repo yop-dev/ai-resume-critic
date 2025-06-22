@@ -1,11 +1,12 @@
 import React from "react";
-import { FileText, BarChart3, CheckCircle, AlertTriangle } from "lucide-react";
+import { FileText, BarChart3, CheckCircle, AlertTriangle, Sparkles } from "lucide-react";
 
 export default function ResumePanel({
   resumeText,
   setResumeText,
   onAnalyze,
   loading,
+  feedback,
 }) {
   return (
     <div style={{
@@ -170,6 +171,76 @@ export default function ResumePanel({
           )}
         </button>
       </div>
+
+      {/* Feedback Section */}
+      {feedback && (
+        <div style={{ marginTop: '32px' }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '16px',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+            padding: '24px',
+            border: '1px solid rgba(226, 232, 240, 0.8)'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              marginBottom: '16px',
+              borderBottom: '1px solid #f1f5f9',
+              paddingBottom: '16px'
+            }}>
+              <div style={{
+                backgroundColor: '#ecfdf5',
+                borderRadius: '12px',
+                padding: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <Sparkles size={24} color="#059669" />
+              </div>
+              <div>
+                <h2 style={{
+                  fontSize: '18px',
+                  fontWeight: '600',
+                  color: '#1e293b',
+                  margin: 0
+                }}>
+                  AI Feedback & Analysis
+                </h2>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#64748b',
+                  margin: 0
+                }}>
+                  Expert recommendations to improve your resume
+                </p>
+              </div>
+            </div>
+            
+            <div>
+              <pre style={{
+                whiteSpace: 'pre-wrap',
+                color: '#374151',
+                lineHeight: '1.6',
+                backgroundColor: '#f9fafb',
+                padding: '16px',
+                borderRadius: '8px',
+                borderLeft: '4px solid #2563eb',
+                fontFamily: 'system-ui, -apple-system, sans-serif',
+                fontSize: '14px',
+                margin: 0,
+                overflowX: 'auto',
+                maxWidth: '100%',
+                boxSizing: 'border-box'
+              }}>
+                {feedback}
+              </pre>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

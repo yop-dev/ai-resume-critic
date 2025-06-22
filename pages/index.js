@@ -423,6 +423,7 @@ export default function Home() {
                 setResumeText={setResumeText}
                 onAnalyze={analyzeResume}
                 loading={loading}
+                feedback={feedback}
               />
             </div>
           )}
@@ -453,60 +454,6 @@ export default function Home() {
             </div>
           )}
 
-          {/* Feedback Section */}
-          {feedback && activeTab === "resume-critique" && (
-            <div className="fade-in" style={{ marginBottom: '32px' }}>
-              <div style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                borderRadius: '16px',
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                padding: '24px'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  marginBottom: '16px'
-                }}>
-                  <div style={{
-                    padding: '8px',
-                    background: 'linear-gradient(to right, #dcfce7, #dbeafe)',
-                    borderRadius: '8px'
-                  }}>
-                    <Sparkles size={20} color="#059669" />
-                  </div>
-                  <h2 style={{
-                    fontSize: '20px',
-                    fontWeight: '600',
-                    color: '#1f2937',
-                    margin: 0
-                  }}>
-                    AI Feedback & Analysis
-                  </h2>
-                </div>
-                <div>
-                  <pre style={{
-                    whiteSpace: 'pre-wrap',
-                    color: '#374151',
-                    lineHeight: '1.6',
-                    backgroundColor: '#f9fafb',
-                    padding: '16px',
-                    borderRadius: '8px',
-                    borderLeft: '4px solid #2563eb',
-                    fontFamily: 'system-ui, -apple-system, sans-serif',
-                    fontSize: '14px',
-                    margin: 0,
-                    overflowX: 'auto',
-                    maxWidth: '100%',
-                    boxSizing: 'border-box'
-                  }}>
-                    {feedback}
-                  </pre>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Footer */}
           {/* Contact Me Section */}
