@@ -595,14 +595,14 @@ export default function Home() {
           {/* Contact Me Section */}
           <section style={{
             marginTop: '40px',
-            padding: isMobile ? '16px 8px' : '24px 16px',
+            padding: isMobile ? '12px 8px' : '24px 16px',
             borderTop: '1px solid #e5e7eb',
             textAlign: 'center',
-            background: 'linear-gradient(135deg, #f0f9ff, #e0f2fe, #dbeafe, #e0f2fe)',
+            background: isMobile ? 'rgba(240, 249, 255, 0.7)' : 'linear-gradient(135deg, #f0f9ff, #e0f2fe, #dbeafe, #e0f2fe)',
             backgroundSize: '400% 400%',
-            animation: 'subtleShift 15s ease infinite',
+            animation: isMobile ? 'none' : 'subtleShift 15s ease infinite',
             borderRadius: '8px',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
+            boxShadow: isMobile ? '0 2px 4px rgba(0, 0, 0, 0.03)' : '0 4px 6px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
             position: 'relative',
             overflow: 'hidden',
             width: '100%',
@@ -628,36 +628,46 @@ export default function Home() {
               pointerEvents: 'none'
             }}></div>
             <div style={{
-              marginBottom: isMobile ? '12px' : '16px',
+              marginBottom: isMobile ? '8px' : '16px',
               textAlign: 'center',
               position: 'relative',
               zIndex: 1
             }}>
-              <h2 style={{
-                fontSize: isMobile ? '16px' : '18px',
-                fontWeight: '600',
-                color: '#2563eb',
-                margin: '0 0 4px 0',
-                letterSpacing: '0.5px'
-              }}>Made By</h2>
-              
-              <h3 style={{
-                fontSize: isMobile ? '15px' : '17px',
-                fontWeight: '600',
-                color: '#111827',
-                margin: '0',
-                letterSpacing: '0.3px'
-              }}>Joner De Silva</h3>
+              {isMobile ? (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '13px', color: '#64748b' }}>Made by</span>
+                  <span style={{ fontSize: '13px', fontWeight: '600', color: '#334155' }}>Joner De Silva</span>
+                </div>
+              ) : (
+                <>
+                  <h2 style={{
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    color: '#2563eb',
+                    margin: '0 0 4px 0',
+                    letterSpacing: '0.5px'
+                  }}>Made By</h2>
+                  
+                  <h3 style={{
+                    fontSize: '17px',
+                    fontWeight: '600',
+                    color: '#111827',
+                    margin: '0',
+                    letterSpacing: '0.3px'
+                  }}>Joner De Silva</h3>
+                </>
+              )}
             </div>
             
             <div style={{
               display: 'flex',
               justifyContent: 'center',
-              gap: isMobile ? '8px' : '16px',
+              gap: isMobile ? '6px' : '16px',
               flexWrap: 'wrap',
-              flexDirection: isMobile ? 'column' : 'row',
+              flexDirection: isMobile ? 'row' : 'row',
               alignItems: 'center',
-              width: '100%'
+              width: '100%',
+              marginTop: isMobile ? '4px' : '0'
             }}>
               {/* LinkedIn Link */}
               <a 
@@ -669,17 +679,17 @@ export default function Home() {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  padding: isMobile ? '8px 16px' : '8px 16px',
-                  borderRadius: '6px',
+                  gap: isMobile ? '4px' : '6px',
+                  padding: isMobile ? '6px 10px' : '8px 16px',
+                  borderRadius: isMobile ? '4px' : '6px',
                   textDecoration: 'none',
                   color: 'white',
                   fontWeight: '500',
-                  fontSize: isMobile ? '14px' : '16px',
+                  fontSize: isMobile ? '12px' : '16px',
                   backgroundColor: '#0077b5',
                   transition: 'transform 0.2s, box-shadow 0.2s',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
-                  width: isMobile ? '100%' : 'auto',
+                  boxShadow: isMobile ? '0 1px 2px rgba(0,0,0,0.1)' : '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+                  width: 'auto',
                   justifyContent: 'center'
                 }}
                 onClick={(e) => {
@@ -720,17 +730,17 @@ export default function Home() {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  padding: isMobile ? '8px 16px' : '8px 16px',
-                  borderRadius: '6px',
+                  gap: isMobile ? '4px' : '6px',
+                  padding: isMobile ? '6px 10px' : '8px 16px',
+                  borderRadius: isMobile ? '4px' : '6px',
                   textDecoration: 'none',
                   color: 'white',
                   fontWeight: '500',
-                  fontSize: isMobile ? '14px' : '16px',
+                  fontSize: isMobile ? '12px' : '16px',
                   backgroundColor: '#24292e',
                   transition: 'transform 0.2s, box-shadow 0.2s',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
-                  width: isMobile ? '100%' : 'auto',
+                  boxShadow: isMobile ? '0 1px 2px rgba(0,0,0,0.1)' : '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+                  width: 'auto',
                   justifyContent: 'center'
                 }}
               >
@@ -748,17 +758,17 @@ export default function Home() {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  padding: isMobile ? '8px 16px' : '8px 16px',
-                  borderRadius: '6px',
+                  gap: isMobile ? '4px' : '6px',
+                  padding: isMobile ? '6px 10px' : '8px 16px',
+                  borderRadius: isMobile ? '4px' : '6px',
                   textDecoration: 'none',
                   color: 'white',
                   fontWeight: '500',
-                  fontSize: isMobile ? '14px' : '16px',
+                  fontSize: isMobile ? '12px' : '16px',
                   backgroundColor: '#4f46e5',
                   transition: 'transform 0.2s, box-shadow 0.2s',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
-                  width: isMobile ? '100%' : 'auto',
+                  boxShadow: isMobile ? '0 1px 2px rgba(0,0,0,0.1)' : '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+                  width: 'auto',
                   justifyContent: 'center'
                 }}
               >
